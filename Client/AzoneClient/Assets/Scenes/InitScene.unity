@@ -167,3 +167,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9eca22cb2148cc04aa7402d6a146e20f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  logLevel: -1
+  isSaveLog: 0

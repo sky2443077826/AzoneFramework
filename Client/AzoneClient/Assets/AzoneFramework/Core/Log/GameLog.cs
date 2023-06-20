@@ -27,6 +27,7 @@ namespace AzoneFramework
         // 日志文件
         private static string _logFile;
 
+        // 日志专用字符串
         private static StringBuilder _logStrBuilder = new StringBuilder();
 
         /// <summary>
@@ -53,6 +54,9 @@ namespace AzoneFramework
                     File.CreateText(_logFile).Dispose();
                 }
             }
+
+            Normal("===游戏日志模块启动完成===");
+            Normal($"===当前日志等级：{_logLevel}===");
         }
 
         /// <summary>

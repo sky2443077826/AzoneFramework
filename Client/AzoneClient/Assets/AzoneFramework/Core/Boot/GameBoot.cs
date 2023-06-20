@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 namespace AzoneFramework
 {
     /// <summary>
@@ -9,15 +10,24 @@ namespace AzoneFramework
     /// </summary>
     public class GameBoot : MonoBehaviour
     {
-        private void Awake()
-        {
-            Debug.Log("游戏程序启动。");
-        }
+        [Header("日志等级")]
+        public ELogLevel logLevel;
+
+        [Header("日志是否导出(非编辑器)")]
+        public bool isSaveLog;
 
         private void Start()
         {
-            // 初始化一些单例类
-            
+
+#if UNITY_EDITOR
+            // 编辑器不输出日志
+            isSaveLog = false;
+#endif
+
+            // 初始化日志系统
+            GameLog.Init(logLevel, isSaveLog);
+
+            LaunchGame();
         }
 
         /// <summary>
@@ -25,7 +35,7 @@ namespace AzoneFramework
         /// </summary>
         private void LaunchGame()
         {
-
+            GameLog.Normal("===游戏启动===");
         }
     }
 }
