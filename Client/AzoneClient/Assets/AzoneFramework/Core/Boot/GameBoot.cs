@@ -26,6 +26,8 @@ namespace AzoneFramework
 
             // 初始化日志系统
             GameLog.Init(logLevel, isSaveLog);
+            // 初始化资源加载器
+            AssetLoader.Instance.Create();
 
             LaunchGame();
         }
@@ -36,6 +38,16 @@ namespace AzoneFramework
         private void LaunchGame()
         {
             GameLog.Normal("===游戏启动===");
+
+            PrefabBase go1 = AssetLoader.Instance.InstantiatePrefab<PrefabBase>("Assets/Cube.prefab");
+            PrefabBase go2 = AssetLoader.Instance.InstantiatePrefab<PrefabBase>("Assets/Cube.prefab");
+            PrefabBase go3 = AssetLoader.Instance.InstantiatePrefab<PrefabBase>("Assets/Cube.prefab");
+            PrefabBase go4 = AssetLoader.Instance.InstantiatePrefab<PrefabBase>("Assets/Cube.prefab");
+
+            Destroy(go1.gameObject);
+            Destroy(go2.gameObject);
+            Destroy(go3.gameObject);
+            Destroy(go4.gameObject);
         }
     }
 }
