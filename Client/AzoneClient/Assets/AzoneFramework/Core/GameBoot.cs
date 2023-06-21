@@ -38,16 +38,6 @@ namespace AzoneFramework
         private void LaunchGame()
         {
             GameLog.Normal("===”Œœ∑∆Ù∂Ø===");
-
-            PrefabBase go1 = AssetLoader.Instance.InstantiatePrefab<PrefabBase>("Assets/Cube.prefab");
-            PrefabBase go2 = AssetLoader.Instance.InstantiatePrefab<PrefabBase>("Assets/Cube.prefab");
-            PrefabBase go3 = AssetLoader.Instance.InstantiatePrefab<PrefabBase>("Assets/Cube.prefab");
-            PrefabBase go4 = AssetLoader.Instance.InstantiatePrefab<PrefabBase>("Assets/Cube.prefab");
-
-            Destroy(go1.gameObject);
-            Destroy(go2.gameObject);
-            Destroy(go3.gameObject);
-            Destroy(go4.gameObject);
         }
     }
 }
