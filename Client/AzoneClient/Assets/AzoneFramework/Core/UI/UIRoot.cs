@@ -4,18 +4,15 @@ using UnityEngine;
 
 namespace AzoneFramework
 {
+    /// <summary>
+    /// UI根节点
+    /// </summary>
     public class UIRoot : MonoBehaviour
     {
-        // Start is called before the first frame update
-        void Start()
-        {
-        
-        }
+        [Header("根面板")]
+        public Canvas stage;
 
-        // Update is called once per frame
-        void Update()
-        {
-        
-        }
+        [Header("UI相机组件")]
+        public Camera uiCamera;
     }
 }
