@@ -25,6 +25,10 @@ MonoBehaviour:
     m_Address: Assets/Cube.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 4b48060a63f5ade43b75c01008bf82ba
+    m_Address: SceneProfile
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 2a80a07e88c76d549af56951e7b1f56a, type: 2}
   m_SchemaSet:

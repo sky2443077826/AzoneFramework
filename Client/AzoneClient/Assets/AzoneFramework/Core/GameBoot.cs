@@ -27,7 +27,7 @@ namespace AzoneFramework
             // 初始化日志系统
             GameLog.Init(logLevel, isSaveLog);
             // 初始化资源加载器
-            AssetLoader.Instance.Create();
+            AddressableLoader.Instance.Create();
 
             LaunchGame();
         }

@@ -4,16 +4,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
 namespace AzoneFramework
 {
-
     /// <summary>
-    /// 资产加载类
+    /// 可寻址资产加载类
     /// </summary>
-    public class AssetLoader : Singleton<AssetLoader>
+    public class AddressableLoader : Singleton<AddressableLoader>
     {
         /// <summary>
         /// 资产引用类
@@ -52,13 +52,58 @@ namespace AzoneFramework
                 RefCount--;
                 if (RefCount <= 0)
                 {
-                    AssetLoader.Instance.UnloadAsset(Address);
+                    AddressableLoader.Instance.UnloadAsset(Address);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 场景引用类
+        /// </summary>
+        internal class SceneReference
+        {
+            /// <summary>
+            /// 引用计数
+            /// </summary>
+            public int RefCount { get; private set; }
+
+            /// <summary>
+            /// 资源地址
+            /// </summary>
+            public string Address { get; private set; }
+
+            /// <summary>
+            /// 资源操作句柄
+            /// </summary>
+            public AsyncOperationHandle Handle { get; }
+
+            public SceneReference(string address, AsyncOperationHandle handle)
+            {
+                RefCount = 0;
+                Address = address;
+                Handle = handle;
+            }
+
+            public void AddCount()
+            {
+                RefCount++;
+            }
+
+            public void SubCount()
+            {
+                RefCount--;
+                if (RefCount <= 0)
+                {
+                    AddressableLoader.Instance.UnloadAsset(Address);
                 }
             }
         }
 
         // 资产缓存
         private Dictionary<string, AssetReference> _assetCache;
+
+        // 场景缓存
+        private Dictionary<string, SceneReference> _sceneCache;
 
         /// <summary>
         /// 创建时
@@ -69,6 +114,9 @@ namespace AzoneFramework
 
             // 预申请一定数量的内存空间，避免频繁扩容
             _assetCache = new Dictionary<string, AssetReference>(10007);
+
+            // 预申请一定数量的内存空间，避免频繁扩容
+            _sceneCache = new Dictionary<string, SceneReference>(19);
         }
 
         /// <summary>
@@ -78,6 +126,8 @@ namespace AzoneFramework
         {
             base.OnDispose();
         }
+
+        #region 资产管理
 
         /// <summary>
         /// 加载资产(异步)
@@ -108,7 +158,7 @@ namespace AzoneFramework
         /// 卸载资产
         /// </summary>
         /// <param name="address"></param>
-        private void UnloadAsset(string address)
+        public void UnloadAsset(string address)
         {
             if (!_assetCache.TryGetValue(address, out AssetReference assetReference))
             {
@@ -182,10 +232,48 @@ namespace AzoneFramework
         }
 
         /// <summary>
-        /// 销毁预制体
+        /// 实例化ScriptableObject
         /// </summary>
         /// <param name="address"></param>
-        public void DestroyPrefab(string address)
+        /// <returns></returns>
+        public T InstantiateScriptableObject<T>(string address) where T : ScriptableObject
+        {
+            if (string.IsNullOrEmpty(address))
+            {
+                GameLog.Error("实例化ScriptableObject失败！---> 资产地址名不可以为空。");
+                return null;
+            }
+
+            AssetReference assetRef = LoadAsset(address);
+            if (assetRef == null)
+            {
+                return null;
+            }
+
+            Object obj = assetRef.Handle.Result as Object;
+            if (obj == null)
+            {
+                return null;
+            }
+
+            ScriptableObjectBase sObjectBase = Object.Instantiate(obj) as ScriptableObjectBase;
+            if (sObjectBase == null)
+            {
+                GameLog.Error($"实例化ScriptableObject失败！---> 资产：{address}不能实例化为ScriptableObject。");
+                return null;
+            }
+
+            sObjectBase.OnCreate(address);
+            assetRef.AddCount();
+
+            return sObjectBase as T;
+        }
+
+        /// <summary>
+        /// 销毁实例
+        /// </summary>
+        /// <param name="address"></param>
+        public void DestroyInstance(string address)
         {
             if (!_assetCache.TryGetValue(address, out AssetReference assetReference))
             {
@@ -194,5 +282,53 @@ namespace AzoneFramework
 
             assetReference?.SubCount();
         }
+
+        #endregion
+
+        #region 场景管理
+
+        /// <summary>
+        /// 加载场景(异步)
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="address"></param>
+        /// <param name="mode"></param>
+        /// <returns></returns>
+        private IEnumerator LoadScene(string address, LoadSceneMode mode)
+        {
+            if (_sceneCache.TryGetValue(address, out SceneReference sceneRef))
+            {
+                yield break;
+            }
+
+            AsyncOperationHandle<SceneInstance> handle = Addressables.LoadSceneAsync(address, mode);
+            yield return handle;
+
+            if (handle.OperationException != null)
+            {
+                GameLog.Error($"场景加载错误！---> 错误原因:{handle.OperationException}");
+                yield break;
+            }
+
+            sceneRef = new SceneReference(address, handle);
+            _sceneCache.Add(address, sceneRef);
+        }
+
+        /// <summary>
+        /// 卸载c
+        /// </summary>
+        /// <param name="address"></param>
+        public void UnLoadScene(string address)
+        {
+            if (!_assetCache.TryGetValue(address, out AssetReference assetReference))
+            {
+                return;
+            }
+
+            Addressables.Release(assetReference.Handle);
+            _assetCache.Remove(address);
+        }
+
+        #endregion
     }
 }
