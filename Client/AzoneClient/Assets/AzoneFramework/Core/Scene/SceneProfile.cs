@@ -22,8 +22,16 @@ namespace AzoneFramework
     [Serializable]
     public struct SceneConfig
     {
+        [Header("场景类型")]
         public ESceneDefine define;
+
+        [Header("场景资源名")]
         public string SceneName;
+
+        [Header("脚本类型")]
+        public string scriptType;
+
+        [Header("是否")]
         public bool isAddressbale;
     }
 

@@ -57,53 +57,8 @@ namespace AzoneFramework
             }
         }
 
-        /// <summary>
-        /// 场景引用类
-        /// </summary>
-        internal class SceneReference
-        {
-            /// <summary>
-            /// 引用计数
-            /// </summary>
-            public int RefCount { get; private set; }
-
-            /// <summary>
-            /// 资源地址
-            /// </summary>
-            public string Address { get; private set; }
-
-            /// <summary>
-            /// 资源操作句柄
-            /// </summary>
-            public AsyncOperationHandle Handle { get; }
-
-            public SceneReference(string address, AsyncOperationHandle handle)
-            {
-                RefCount = 0;
-                Address = address;
-                Handle = handle;
-            }
-
-            public void AddCount()
-            {
-                RefCount++;
-            }
-
-            public void SubCount()
-            {
-                RefCount--;
-                if (RefCount <= 0)
-                {
-                    AddressableLoader.Instance.UnloadAsset(Address);
-                }
-            }
-        }
-
         // 资产缓存
         private Dictionary<string, AssetReference> _assetCache;
-
-        // 场景缓存
-        private Dictionary<string, SceneReference> _sceneCache;
 
         /// <summary>
         /// 创建时
@@ -113,10 +68,8 @@ namespace AzoneFramework
             base.OnCreate();
 
             // 预申请一定数量的内存空间，避免频繁扩容
-            _assetCache = new Dictionary<string, AssetReference>(10007);
+            _assetCache = new Dictionary<string, AssetReference>(10000);
 
-            // 预申请一定数量的内存空间，避免频繁扩容
-            _sceneCache = new Dictionary<string, SceneReference>(19);
         }
 
         /// <summary>
@@ -285,50 +238,5 @@ namespace AzoneFramework
 
         #endregion
 
-        #region 场景管理
-
-        /// <summary>
-        /// 加载场景(异步)
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="address"></param>
-        /// <param name="mode"></param>
-        /// <returns></returns>
-        private IEnumerator LoadScene(string address, LoadSceneMode mode)
-        {
-            if (_sceneCache.TryGetValue(address, out SceneReference sceneRef))
-            {
-                yield break;
-            }
-
-            AsyncOperationHandle<SceneInstance> handle = Addressables.LoadSceneAsync(address, mode);
-            yield return handle;
-
-            if (handle.OperationException != null)
-            {
-                GameLog.Error($"场景加载错误！---> 错误原因:{handle.OperationException}");
-                yield break;
-            }
-
-            sceneRef = new SceneReference(address, handle);
-            _sceneCache.Add(address, sceneRef);
-        }
-
-        /// <summary>
-        /// 卸载c
-        /// </summary>
-        /// <param name="address"></param>
-        public void UnLoadScene(string address)
-        {
-            if (!_assetCache.TryGetValue(address, out AssetReference assetReference))
-            {
-                return;
-            }
-
-            Addressables.Release(assetReference.Handle);
-            _assetCache.Remove(address);
-        }
-
-        #endregion
     }
 }

@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 69aa8b4915b07764d8fcb77e3281b8b1, type: 3}
   m_Name: SceneProfile
   m_EditorClassIdentifier: 
-  Configs:
+  configs:
   - define: 1
     SceneName: MainScene
+    isAddressbale: 0
+    scriptType: MainScene
