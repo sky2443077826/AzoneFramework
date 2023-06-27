@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,9 +29,10 @@ namespace AzoneFramework
     }
 
     /// <summary>
-    /// 自定义数据类型
+    /// 可变数据类型
+    /// 支持枚举中的所有类型数据
     /// </summary>
-    public struct CustomData
+    public struct VariableData
     {
         public eDataType type;
         public bool bValue;
@@ -42,11 +44,11 @@ namespace AzoneFramework
         public Vector3 vec3;
         public object obj;
 
-        public static CustomData None = new CustomData() { type = eDataType.Invalid };
+        public static VariableData None = new VariableData() { type = eDataType.Invalid };
 
         #region 构造函数 
 
-        public CustomData(byte value)
+        public VariableData(byte value)
         {
             type = eDataType.Byte;
             lValue = 0;
@@ -59,7 +61,7 @@ namespace AzoneFramework
             vec3 = Vector3.zero;
         }
 
-        public CustomData(sbyte value)
+        public VariableData(sbyte value)
         {
             type = eDataType.SByte;
             lValue = value;
@@ -72,7 +74,7 @@ namespace AzoneFramework
             vec3 = Vector3.zero;
         }
 
-        public CustomData(short value)
+        public VariableData(short value)
         {
             type = eDataType.Short;
             lValue = value;
@@ -85,7 +87,7 @@ namespace AzoneFramework
             vec3 = Vector3.zero;
         }
 
-        public CustomData(ushort value)
+        public VariableData(ushort value)
         {
             type = eDataType.UShort;
             lValue = 0;
@@ -98,7 +100,7 @@ namespace AzoneFramework
             vec3 = Vector3.zero;
         }
 
-        public CustomData(int value)
+        public VariableData(int value)
         {
             type = eDataType.Int;
             lValue = value;
@@ -111,7 +113,7 @@ namespace AzoneFramework
             vec3 = Vector3.zero;
         }
 
-        public CustomData(uint value)
+        public VariableData(uint value)
         {
             type = eDataType.UInt;
             lValue = 0;
@@ -124,7 +126,7 @@ namespace AzoneFramework
             vec3 = Vector3.zero;
         }
 
-        public CustomData(long value)
+        public VariableData(long value)
         {
             type = eDataType.Long;
             lValue = value;
@@ -137,7 +139,7 @@ namespace AzoneFramework
             vec3 = Vector3.zero;
         }
 
-        public CustomData(ulong value)
+        public VariableData(ulong value)
         {
             type = eDataType.ULong;
             lValue = 0;
@@ -150,7 +152,7 @@ namespace AzoneFramework
             vec3 = Vector3.zero;
         }
 
-        public CustomData(float value)
+        public VariableData(float value)
         {
             type = eDataType.Float;
             lValue = 0;
@@ -163,7 +165,7 @@ namespace AzoneFramework
             vec3 = Vector3.zero;
         }
 
-        public CustomData(double value)
+        public VariableData(double value)
         {
             type = eDataType.Double;
             lValue = 0;
@@ -176,7 +178,7 @@ namespace AzoneFramework
             vec3 = Vector3.zero;
         }
 
-        public CustomData(bool value)
+        public VariableData(bool value)
         {
             type = eDataType.Bool;
             lValue = 0;
@@ -189,7 +191,7 @@ namespace AzoneFramework
             vec3 = Vector3.zero;
         }
 
-        public CustomData(string value)
+        public VariableData(string value)
         {
             type = eDataType.String;
             lValue = 0;
@@ -205,7 +207,7 @@ namespace AzoneFramework
             vec3 = Vector3.zero;
         }
 
-        public CustomData(Vector2 value)
+        public VariableData(Vector2 value)
         {
             type = eDataType.Vector2;
             lValue = 0;
@@ -218,7 +220,7 @@ namespace AzoneFramework
             vec3 = Vector3.zero;
         }
 
-        public CustomData(Vector3 value)
+        public VariableData(Vector3 value)
         {
             type = eDataType.Vector3;
             lValue = 0;
@@ -231,7 +233,7 @@ namespace AzoneFramework
             vec3 = value;
         }
 
-        public CustomData(object value)
+        public VariableData(object value)
         {
             type = eDataType.Object;
             lValue = 0;
@@ -500,7 +502,7 @@ namespace AzoneFramework
             }
         }
 
-        public static bool operator ==(CustomData data1, CustomData data2)
+        public static bool operator ==(VariableData data1, VariableData data2)
         {
             if (data1.type != data2.type)
             {
@@ -535,7 +537,7 @@ namespace AzoneFramework
             }
         }
 
-        public static bool operator !=(CustomData data1, CustomData data2)
+        public static bool operator !=(VariableData data1, VariableData data2)
         {
             return !(data1 == data2);
         }
@@ -559,8 +561,8 @@ namespace AzoneFramework
         const int MAX_POOL_COUNT = 128;
         const int MAX_SIZE = 10;
 
-        private CustomData[] _buffer = new CustomData[MAX_SIZE];
-        private int offset;
+        private VariableData[] _buffer = new VariableData[MAX_SIZE];
+        private int _offset;
 
         /// <summary>
         /// 元素数量
@@ -570,7 +572,7 @@ namespace AzoneFramework
         /// <summary>
         /// 数据池
         /// </summary>
-        private static Queue<DataList> _customDataPool = new Queue<DataList>();
+        private static Queue<DataList> _dataPool = new Queue<DataList>();
 
         /// <summary>
         /// 获取数据
@@ -579,18 +581,18 @@ namespace AzoneFramework
         public static DataList Get()
         {
             DataList list;
-            lock (_customDataPool)
+            lock (_dataPool)
             {
-                if (_customDataPool.Count > 0)
+                if (_dataPool.Count > 0)
                 {
-                    list = _customDataPool.Dequeue();
+                    list = _dataPool.Dequeue();
                 }
                 else
                 {
                     list = new DataList();
                 }
             }
-            list.offset = 0;
+            list._offset = 0;
             list.Count = 0;
             return list;
         }
@@ -617,16 +619,570 @@ namespace AzoneFramework
             {
                 _buffer[i].Reset();
             }
-            lock (_customDataPool)
+            lock (_dataPool)
             {
                 /* 
                  * 对象池中只允许最大存在MAX个对象，避免造成资源浪费
                 */
-                if (_customDataPool.Count <= MAX_POOL_COUNT)
+                if (_dataPool.Count <= MAX_POOL_COUNT)
                 {
-                    _customDataPool.Enqueue(this);
+                    _dataPool.Enqueue(this);
                 }
             }
         }
+
+        public bool CheckFull()
+        {
+            return Count >= MAX_SIZE;
+        }
+
+        #region 添加数据
+
+        public DataList AddData(VariableData data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset] = data;
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList AddSByte(sbyte data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset].SetVal(data);
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList AddByte(byte data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset].SetVal(data);
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList AddShort(short data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset].SetVal(data);
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList AddUShort(ushort data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset].SetVal(data);
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList AddInt(int data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset].lValue = data;
+            _buffer[_offset].type = eDataType.Int;
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList AddUInt(uint data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset].SetVal(data);
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList AddLong(long data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset].SetVal(data);
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList AddULong(ulong data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset].SetVal(data);
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList AddFloat(float data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset].SetVal(data);
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList AddDouble(double data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset].SetVal(data);
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList AddBool(bool data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset].SetVal(data);
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList AddString(string data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset].SetVal(data);
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList AddVector2(Vector2 data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset].SetVal(data);
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList AddVector3(Vector3 data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset].SetVal(data);
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList AddObject(object data)
+        {
+            if (CheckFull())
+            {
+                GameLog.Error("数据列表已满，无法继续添加。");
+                return this;
+            }
+
+            _buffer[_offset].SetVal(data);
+            ++_offset;
+            ++Count;
+            return this;
+        }
+
+        public DataList Add(sbyte data)
+        {
+            return AddSByte(data);
+        }
+
+        public DataList Add(byte data)
+        {
+            return AddByte(data);
+        }
+
+        public DataList Add(short data)
+        {
+            return AddShort(data);
+        }
+
+        public DataList Add(ushort data)
+        {
+            return AddUShort(data);
+        }
+
+        public DataList Add(int data)
+        {
+            return AddInt(data);
+        }
+
+        public DataList Add(uint data)
+        {
+            return AddUInt(data);
+        }
+
+        public DataList Add(long data)
+        {
+            return AddLong(data);
+        }
+
+        public DataList Add(ulong data)
+        {
+            return AddULong(data);
+        }
+
+        public DataList Add(float data)
+        {
+            return AddFloat(data);
+        }
+
+        public DataList Add(double data)
+        {
+            return AddDouble(data);
+        }
+
+        public DataList Add(bool data)
+        {
+            return AddBool(data);
+        }
+
+        public DataList Add(string data)
+        {
+            return AddString(data);
+        }
+
+        public DataList Add(Vector2 data)
+        {
+            return AddVector2(data);
+        }
+
+        public DataList Add(Vector3 data)
+        {
+            return AddVector3(data);
+        }
+
+        public DataList Add(VariableData data)
+        {
+            return AddData(data);
+        }
+
+        public DataList Add(object data)
+        {
+            return AddObject(data);
+        }
+
+        /// <summary>
+        /// 添加Varlist类型
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public DataList Add(DataList other)
+        {
+            for (int index = 0; index < other.Count; ++index)
+            {
+                Add(other._buffer[index]);
+            }
+
+            return this;
+        }
+
+        /// <summary>
+        /// 追加Varlist类型
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public DataList Append(DataList other, int start, int count)
+        {
+            if (start < 0 || count <= 0)
+            {
+                return this;
+            }
+
+            if (start + count > MAX_SIZE)
+            {
+                GameLog.Error("数据列表拼接失败！---> 超过长度限制。");
+                return this;
+            }
+
+            int end = start + count;
+
+            if (end >= other.Count)
+            {
+                end = other.Count;
+            }
+
+            // 已经超过了，从start开始全部添加
+            for (int index = start; index < end; ++index)
+            {
+                Add(other._buffer[index]);
+            }
+
+            return this;
+        }
+
+        #endregion
+
+        #region 读取数据
+
+        public VariableData ReadVar(int index)
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return VariableData.None;
+            }
+
+            return _buffer[index];
+        }
+
+        public byte ReadByte(int index)
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return 0;
+            }
+            byte val = default;
+            _buffer[index].GetVal(ref val);
+            return val;
+        }
+
+        public sbyte ReadSByte(int index)
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return 0;
+            }
+            sbyte val = default;
+            _buffer[index].GetVal(ref val);
+            return val;
+        }
+
+        public short ReadShort(int index)
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return 0;
+            }
+            short val = default;
+            _buffer[index].GetVal(ref val);
+            return val;
+        }
+
+        public ushort ReadUShort(int index)
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return 0;
+            }
+            ushort val = default;
+            _buffer[index].GetVal(ref val);
+            return val;
+        }
+
+        public int ReadInt(int index)
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return 0;
+            }
+            int val = default;
+            _buffer[index].GetVal(ref val);
+            return val;
+        }
+
+        public uint ReadUInt(int index)
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return 0;
+            }
+            uint val = default;
+            _buffer[index].GetVal(ref val);
+            return val;
+        }
+
+        public long ReadLong(int index)
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return 0;
+            }
+            long val = default;
+            _buffer[index].GetVal(ref val);
+            return val;
+        }
+
+        public ulong ReadULong(int index)
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return 0;
+            }
+            ulong val = default;
+            _buffer[index].GetVal(ref val);
+            return val;
+        }
+
+        public float ReadFloat(int index)
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return 0;
+            }
+            float val = default;
+            _buffer[index].GetVal(ref val);
+            return val;
+        }
+
+        public double ReadDouble(int index)
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return 0;
+            }
+            double val = default;
+            _buffer[index].GetVal(ref val);
+            return val;
+        }
+
+        public string ReadString(int index)
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return string.Empty;
+            }
+            string val = default;
+            _buffer[index].GetVal(ref val);
+            return val;
+        }
+
+        public bool ReadBool(int index)
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return false;
+            }
+
+            bool val = default;
+            _buffer[index].GetVal(ref val);
+            return val;
+        }
+
+        public object ReadObjectByType(int index, Type type)
+        {
+            object obj = default;
+            _buffer[index].GetVal(ref obj);
+            return Convert.ChangeType(obj, type);
+        }
+
+        public T ReadObject<T>(int index) where T : class
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return null;
+            }
+            object obj = default;
+            _buffer[index].GetVal(ref obj);
+            if (obj != null)
+            {
+                return obj as T;
+            }
+            return null;
+        }
+
+        public Vector2 ReadVec2(int index)
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return Vector2.zero;
+            }
+            Vector2 val = default;
+            _buffer[index].GetVal(ref val);
+            return val;
+        }
+
+        public Vector3 ReadVec3(int index)
+        {
+            if (index < 0 || index >= _buffer.Length)
+            {
+                return Vector3.zero;
+            }
+            Vector3 val = default;
+            _buffer[index].GetVal(ref val);
+            return val;
+        }
+
+        #endregion
     }
 }

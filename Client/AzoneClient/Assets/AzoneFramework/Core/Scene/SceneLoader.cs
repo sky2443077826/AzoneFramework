@@ -13,7 +13,7 @@ namespace AzoneFramework
     /// <summary>
     /// 场景加载类
     /// </summary>
-    public class SceneController : Singleton<SceneController>
+    public class SceneLoader : Singleton<SceneLoader>
     {
         // 场景配置资产地址
         private static readonly string sceneProfileAddress = "SceneProfile";
@@ -102,13 +102,16 @@ namespace AzoneFramework
             }
 
             // 创建场景对象
-            _currentLoadScene = Activator.CreateInstance(Type.GetType(config.scriptType)) as SceneBase;
+            Type scriptType = System.Reflection.Assembly.Load("Assembly-CSharp").GetType(config.scriptType);
+            _currentLoadScene = Activator.CreateInstance(scriptType) as SceneBase;
             if (_currentLoadScene == null)
             {
                 GameLog.Error($"进入场景失败！---> 场景{define}脚本类型{config.scriptType}错误。");
                 return;
             }
             _currentLoadScene.config = config;
+            _currentLoadScene.OnLoadStart();
+
 
             // 开启场景加载协程
             GameMonoRoot.Instance.StartCoroutine(LoadSceneAsync(config, mode));
@@ -148,7 +151,6 @@ namespace AzoneFramework
                     simulateProgress = 1;
                 }
                 _currentLoadScene.Progress = simulateProgress * 0.8f;
-                // TODO 广播场景加载进度条改变
 
                 if (IsSceneLoadEnd(config.isAddressbale))
                 {

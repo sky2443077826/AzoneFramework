@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -26,10 +27,20 @@ namespace AzoneFramework
 
             // 初始化日志系统
             GameLog.Init(logLevel, isSaveLog);
+            // 初始化事件派发器(框架和游戏)
+            FrameEvent.Instance.Create();
+            FrameEvent.Instance.Listen(EFrameEventID.UIModuleInitSuccess, OnUIModuleInitSuccess);
+
+            // 创建GameMono单例
+            GameMonoRoot.CreateInstance();
+
             // 初始化资源加载器
             AddressableLoader.Instance.Create();
+            // 初始化场景加载器
+            SceneLoader.Instance.Create();
+            // 初始化UI管理器
+            UIManager.Instance.Create();
 
-            LaunchGame();
         }
 
         /// <summary>
@@ -38,6 +49,17 @@ namespace AzoneFramework
         private void LaunchGame()
         {
             GameLog.Normal("===游戏启动===");
+            SceneLoader.Instance.EnterScene(ESceneDefine.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single);
+        }
+
+        /// <summary>
+        /// 当UI模块加载完成
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="dataList"></param>
+        private void OnUIModuleInitSuccess(EFrameEventID id, DataList dataList)
+        {
+            LaunchGame();
         }
     }
 }

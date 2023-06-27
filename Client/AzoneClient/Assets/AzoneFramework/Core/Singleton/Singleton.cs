@@ -31,12 +31,12 @@ namespace AzoneFramework
 
         protected virtual void OnCreate()
         {
-
+            GameLog.Normal($"===模块{typeof(T).Name}启动===");
         }
 
         protected virtual void OnDispose()
         {
-
+            GameLog.Normal($"===模块{typeof(T).Name}销毁===");
         }
 
         #endregion

@@ -32,6 +32,7 @@ namespace AzoneFramework
             }
 
             Instance = new GameObject(typeof(GameMonoRoot).Name).GetOrAddComponent<GameMonoRoot>();
+            DontDestroyOnLoad(Instance.gameObject);
             return true;
         }
 

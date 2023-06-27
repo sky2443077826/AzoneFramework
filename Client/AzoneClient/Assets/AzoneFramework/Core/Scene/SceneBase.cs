@@ -22,6 +22,7 @@ namespace AzoneFramework
 
 
         private float _progress;
+
         /// <summary>
         /// 加载进度
         /// </summary>
@@ -32,7 +33,10 @@ namespace AzoneFramework
             set
             {
                 _progress = value;
-                // TODO 广播增加进度事件
+                // 广播场景加载进度条改变
+                DataList dataList = DataList.Get();
+                FrameEvent.Instance.Dispatch(EFrameEventID.OnSceneLoading, dataList.AddInt((int)config.define).AddFloat(_progress));
+                dataList.Dispose();
             }
         }
 
@@ -46,6 +50,10 @@ namespace AzoneFramework
         /// </summary>
         public virtual void OnLoadStart()
         {
+            // 派发场景加载开始事件
+            DataList dataList = DataList.Get();
+            FrameEvent.Instance.Dispatch(EFrameEventID.OnLoadSceneStart, dataList.AddInt((int)config.define));
+            dataList.Dispose();
         }
 
         /// <summary>
@@ -53,7 +61,10 @@ namespace AzoneFramework
         /// </summary>
         public virtual void OnLoadEnd()
         {
-
+            // 派发场景加载结束事件
+            DataList dataList = DataList.Get();
+            FrameEvent.Instance.Dispatch(EFrameEventID.OnSceneLoadEnd, dataList.AddInt((int)config.define));
+            dataList.Dispose();
         }
 
         /// <summary>
@@ -81,6 +92,11 @@ namespace AzoneFramework
         public virtual void OnShow()
         {
             Show = true;
+
+            // 派发场景加载之后事件
+            DataList dataList = DataList.Get();
+            FrameEvent.Instance.Dispatch(EFrameEventID.AfterSceneLoad, dataList.AddInt((int)config.define));
+            dataList.Dispose();
         }
 
         /// <summary>

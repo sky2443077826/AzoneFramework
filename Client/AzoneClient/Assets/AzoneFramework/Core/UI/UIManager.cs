@@ -6,6 +6,7 @@ namespace AzoneFramework
 {
     public class UIManager : Singleton<UIManager>
     {
+        // 根节点资源名
         private static readonly string UIROOT_NAME = "UIRoot";
 
         // UI根节点
@@ -37,6 +38,9 @@ namespace AzoneFramework
             }
         }
 
+        /// <summary>
+        /// 创建时
+        /// </summary>
         protected override void OnCreate()
         {
             base.OnCreate();
@@ -63,6 +67,9 @@ namespace AzoneFramework
 
         }
 
+        /// <summary>
+        /// 销毁时
+        /// </summary>
         protected override void OnDispose()
         {
             base.OnDispose();
