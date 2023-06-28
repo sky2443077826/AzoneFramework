@@ -6,6 +6,7 @@ using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using UnityEngine.ResourceManagement.ResourceProviders;
 using UnityEngine.SceneManagement;
+using UnityEngine.U2D;
 using Object = UnityEngine.Object;
 
 namespace AzoneFramework
@@ -15,6 +16,8 @@ namespace AzoneFramework
     /// </summary>
     public class AddressableLoader : Singleton<AddressableLoader>
     {
+        private static readonly string ADDRESSABLE_SUB_ASSET_FORMAT = "{0}[{1}]";
+
         /// <summary>
         /// 资产引用类
         /// </summary>
@@ -80,10 +83,19 @@ namespace AzoneFramework
             base.OnDispose();
         }
 
+        /// <summary>
+        /// 获取子资产地址
+        /// </summary>
+        /// <returns></returns>
+        private string GetSubAssetAddress(string parentAddress, string subAssetName)
+        {
+            return string.Format(ADDRESSABLE_SUB_ASSET_FORMAT, parentAddress, subAssetName);
+        }
+
         #region 资产管理
 
         /// <summary>
-        /// 加载资产(异步)
+        /// 加载资产
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
@@ -98,7 +110,7 @@ namespace AzoneFramework
             Object obj = handle.WaitForCompletion() as Object;
             if (handle.OperationException != null || obj == null)
             {
-                GameLog.Error($"资产加载错误！---> 错误原因:{handle.OperationException}");
+                GameLog.Error($"资产加载错误！---> 资产{address}，错误原因:{handle.OperationException}");
                 return null;
             }
 
@@ -123,7 +135,8 @@ namespace AzoneFramework
         }
 
         /// <summary>
-        /// 加载资产(异步)，此接口不会增加资产引用计数！
+        /// 加载资产
+        /// 慎用，此接口不会增加资产引用计数！若使用需要自行管理引用计数。
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="address"></param>
@@ -236,6 +249,45 @@ namespace AzoneFramework
             assetReference?.SubCount();
         }
 
+        /// <summary>
+        /// 加载精灵图资产
+        /// </summary>
+        /// <param name="altasAddress"></param>
+        /// <param name="spriteName"></param>
+        public Sprite LoadSprite(string altasAddress, string spriteName)
+        {
+            string spriteAddress = GetSubAssetAddress(altasAddress, spriteName);
+            AssetReference assetRef = LoadAsset(spriteAddress);
+            if (assetRef == null)
+            {
+                return null;
+            }
+
+            // 转换为精灵图集
+            Sprite sprite = assetRef.Handle.Result as Sprite;
+            if (sprite == null)
+            {
+                GameLog.Error($"加载sprite失败！---> 资产：{spriteAddress}不能转换为sprite类型。");
+            }
+
+            return sprite;
+        }
+
+        /// <summary>
+        /// 卸载精灵图资产
+        /// </summary>
+        /// <param name="altasAddress"></param>
+        /// <param name="spriteName"></param>
+        public void UnLoadSprite(string altasAddress, string spriteName)
+        {
+            string spriteAddress = GetSubAssetAddress(altasAddress, spriteName);
+            if (!_assetCache.TryGetValue(spriteAddress, out AssetReference assetReference))
+            {
+                return;
+            }
+
+            assetReference?.SubCount();
+        }
         #endregion
 
     }

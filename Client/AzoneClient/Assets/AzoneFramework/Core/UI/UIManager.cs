@@ -4,6 +4,9 @@ using UnityEngine;
 
 namespace AzoneFramework
 {
+    /// <summary>
+    /// UI管理器
+    /// </summary>
     public class UIManager : Singleton<UIManager>
     {
         // 根节点资源名
