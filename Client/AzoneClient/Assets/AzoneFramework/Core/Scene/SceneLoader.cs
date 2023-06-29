@@ -16,7 +16,7 @@ namespace AzoneFramework
     public class SceneLoader : Singleton<SceneLoader>
     {
         // 场景配置资产地址
-        private static readonly string sceneProfileAddress = "SceneProfile";
+        private static readonly string _SCENEPROFILE_ADDRESS = "SceneProfile";
 
         // 场景配置
         private SceneProfile _sceneProfile;
@@ -41,10 +41,10 @@ namespace AzoneFramework
             base.OnCreate();
 
             // 加载场景配置文件
-            _sceneProfile = AddressableLoader.Instance.InstantiateScriptableObject<SceneProfile>(sceneProfileAddress);
+            _sceneProfile = AddressableLoader.Instance.InstantiateScriptableObject<SceneProfile>(_SCENEPROFILE_ADDRESS);
             if (_sceneProfile == null)
             {
-                GameLog.Error($"创建SceneController失败！---> 无法加载场景配置文件{sceneProfileAddress}。");
+                GameLog.Error($"创建SceneController失败！---> 无法加载场景配置文件{_SCENEPROFILE_ADDRESS}。");
                 return;
             }
 

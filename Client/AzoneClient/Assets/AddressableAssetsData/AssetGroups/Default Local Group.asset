@@ -29,6 +29,10 @@ MonoBehaviour:
     m_Address: SceneProfile
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: c0f79bb7aa22600419190f348e0db4b8
+    m_Address: UIProfile
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 2a80a07e88c76d549af56951e7b1f56a, type: 2}
   m_SchemaSet:

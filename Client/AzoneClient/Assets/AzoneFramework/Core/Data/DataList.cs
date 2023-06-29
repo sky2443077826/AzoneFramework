@@ -611,7 +611,22 @@ namespace AzoneFramework
         }
 
         /// <summary>
+        /// 拷贝
+        /// </summary>
+        public DataList Copy()
+        {
+            DataList dataList = Get();
+
+            Array.Copy(_buffer, dataList._buffer, MAX_SIZE);
+            dataList._offset = _offset;
+            dataList.Count = Count;
+
+            return dataList;
+        }
+
+        /// <summary>
         /// 弃置
+        /// 调用此方法前，请确保此对象未被任何对象引用，否则数据会出错。
         /// </summary>
         public void Dispose()
         {

@@ -16,7 +16,6 @@ namespace AzoneFramework
     /// </summary>
     public class AddressableLoader : Singleton<AddressableLoader>
     {
-        private static readonly string ADDRESSABLE_SUB_ASSET_FORMAT = "{0}[{1}]";
 
         /// <summary>
         /// 资产引用类
@@ -55,7 +54,7 @@ namespace AzoneFramework
                 RefCount--;
                 if (RefCount <= 0)
                 {
-                    AddressableLoader.Instance.UnloadAsset(Address);
+                    Instance.ReleaseAsset(Address);
                 }
             }
         }
@@ -83,14 +82,6 @@ namespace AzoneFramework
             base.OnDispose();
         }
 
-        /// <summary>
-        /// 获取子资产地址
-        /// </summary>
-        /// <returns></returns>
-        private string GetSubAssetAddress(string parentAddress, string subAssetName)
-        {
-            return string.Format(ADDRESSABLE_SUB_ASSET_FORMAT, parentAddress, subAssetName);
-        }
 
         #region 资产管理
 
@@ -120,18 +111,17 @@ namespace AzoneFramework
         }
 
         /// <summary>
-        /// 卸载资产
+        /// 释放引用
         /// </summary>
         /// <param name="address"></param>
-        public void UnloadAsset(string address)
+        private void ReleaseRefrence(string address)
         {
             if (!_assetCache.TryGetValue(address, out AssetReference assetReference))
             {
                 return;
             }
 
-            Addressables.Release(assetReference.Handle);
-            _assetCache.Remove(address);
+            assetReference?.SubCount();
         }
 
         /// <summary>
@@ -159,11 +149,31 @@ namespace AzoneFramework
         }
 
         /// <summary>
-        /// 实例化预制体
+        /// 释放资产
+        /// 除非调用LoadAsset方法加载的Asset，且进行了引用管理，否则不应该使用此方法直接释放Asset
+        /// </summary>
+        /// <param name="address"></param>
+        public void ReleaseAsset(string address)
+        {
+            if (!_assetCache.TryGetValue(address, out AssetReference assetReference))
+            {
+                return;
+            }
+
+            Addressables.Release(assetReference.Handle);
+            _assetCache.Remove(address);
+        }
+
+        #endregion
+
+        #region 模型管理
+
+        /// <summary>
+        /// 实例化模型
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        public T InstantiatePrefab<T>(string address, Transform parent = null) where T : PrefabBase
+        public T InstantiateModel<T>(string address, Transform parent = null) where T : ModelBase
         {
             if (string.IsNullOrEmpty(address))
             {
@@ -190,19 +200,143 @@ namespace AzoneFramework
                 return null;
             }
 
-            PrefabBase prefabBase = gameObject.GetOrAddComponent<T>();
-            prefabBase.OnCreate(address);
+            ModelBase modelBase = gameObject.GetOrAddComponent<T>();
+            modelBase.OnCreate(address);
             assetRef.AddCount();
 
-            return prefabBase as T;
+            return modelBase as T;
         }
+
+        /// <summary>
+        /// 释放模型实例
+        /// </summary>
+        /// <param name="address"></param>
+        public void ReleaseModel(string address)
+        {
+            ReleaseRefrence(address);
+        }
+
+        #endregion
+
+        #region 精灵图管理
+
+        /// <summary>
+        /// 加载精灵图资产
+        /// </summary>
+        /// <param name="altasAddress"></param>
+        /// <param name="spriteName"></param>
+        public Sprite LoadSprite(string altasAddress, string spriteName)
+        {
+            string spriteAddress = StringUtility.GetSubAssetAddress(altasAddress, spriteName);
+            return LoadSprite(spriteAddress);
+        }
+
+        /// <summary>
+        /// 加载精灵图资产
+        /// </summary>
+        /// <param name="altasAddress"></param>
+        /// <param name="spriteName"></param>
+        public Sprite LoadSprite(string spriteAddress)
+        {
+            AssetReference assetRef = LoadAsset(spriteAddress);
+            if (assetRef == null)
+            {
+                return null;
+            }
+
+            // 转换为精灵图集
+            Sprite sprite = assetRef.Handle.Result as Sprite;
+            if (sprite == null)
+            {
+                GameLog.Error($"加载sprite失败！---> 资产：{spriteAddress}不能转换为sprite类型。");
+            }
+
+            return sprite;
+        }
+
+        /// <summary>
+        /// 卸载精灵图资产
+        /// </summary>
+        /// <param name="altasAddress"></param>
+        /// <param name="spriteName"></param>
+        public void UnLoadSprite(string altasAddress, string spriteName)
+        {
+            string spriteAddress = StringUtility.GetSubAssetAddress(altasAddress, spriteName);
+            ReleaseAsset(spriteAddress);
+        }
+
+        /// <summary>
+        /// 卸载精灵图资产
+        /// </summary>
+        /// <param name="address"></param>
+        public void UnLoadSprite(string address)
+        {
+            ReleaseRefrence(address);
+        }
+
+        #endregion
+
+        #region UI管理
+
+        /// <summary>
+        /// 实例化UI对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="address"></param>
+        /// <returns></returns>
+        public T InstantiateUI<T>(string address) where T : UIBase
+        {
+            if (string.IsNullOrEmpty(address))
+            {
+                GameLog.Error("实例化UI失败！---> 资产地址名不可以为空。");
+                return null;
+            }
+
+            AssetReference assetRef = LoadAsset(address);
+            if (assetRef == null)
+            {
+                return null;
+            }
+
+            Object obj = assetRef.Handle.Result as Object;
+            if (obj == null)
+            {
+                return null;
+            }
+
+            GameObject gameObject = Object.Instantiate(obj) as GameObject;
+            if (gameObject == null)
+            {
+                GameLog.Error($"实例化UI失败！---> 资产：{address}不能实例化为GameObject。");
+                return null;
+            }
+
+            T uiBase = gameObject.GetOrAddComponent<T>();
+            uiBase.OnLoad(address);
+            assetRef.AddCount();
+
+            return uiBase;
+        }
+
+        /// <summary>
+        /// 释放UI对象
+        /// </summary>
+        /// <param name="address"></param>
+        public void ReleaseUI(string address)
+        {
+            ReleaseRefrence(address);
+        }
+
+        #endregion
+
+        #region 脚本数据对象管理
 
         /// <summary>
         /// 实例化ScriptableObject
         /// </summary>
         /// <param name="address"></param>
         /// <returns></returns>
-        public T InstantiateScriptableObject<T>(string address) where T : ScriptableObject
+        public T InstantiateScriptableObject<T>(string address) where T : ScriptableObjectBase
         {
             if (string.IsNullOrEmpty(address))
             {
@@ -236,59 +370,14 @@ namespace AzoneFramework
         }
 
         /// <summary>
-        /// 销毁实例
+        /// 释放ScriptableObject
         /// </summary>
         /// <param name="address"></param>
-        public void DestroyInstance(string address)
+        public void ReleaseScriptableObject(string address)
         {
-            if (!_assetCache.TryGetValue(address, out AssetReference assetReference))
-            {
-                return;
-            }
-
-            assetReference?.SubCount();
+            ReleaseRefrence(address);
         }
 
-        /// <summary>
-        /// 加载精灵图资产
-        /// </summary>
-        /// <param name="altasAddress"></param>
-        /// <param name="spriteName"></param>
-        public Sprite LoadSprite(string altasAddress, string spriteName)
-        {
-            string spriteAddress = GetSubAssetAddress(altasAddress, spriteName);
-            AssetReference assetRef = LoadAsset(spriteAddress);
-            if (assetRef == null)
-            {
-                return null;
-            }
-
-            // 转换为精灵图集
-            Sprite sprite = assetRef.Handle.Result as Sprite;
-            if (sprite == null)
-            {
-                GameLog.Error($"加载sprite失败！---> 资产：{spriteAddress}不能转换为sprite类型。");
-            }
-
-            return sprite;
-        }
-
-        /// <summary>
-        /// 卸载精灵图资产
-        /// </summary>
-        /// <param name="altasAddress"></param>
-        /// <param name="spriteName"></param>
-        public void UnLoadSprite(string altasAddress, string spriteName)
-        {
-            string spriteAddress = GetSubAssetAddress(altasAddress, spriteName);
-            if (!_assetCache.TryGetValue(spriteAddress, out AssetReference assetReference))
-            {
-                return;
-            }
-
-            assetReference?.SubCount();
-        }
         #endregion
-
     }
 }

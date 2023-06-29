@@ -24,7 +24,7 @@ namespace AzoneFramework
 
         public void DestoryInstance()
         {
-            AddressableLoader.Instance.DestroyInstance(Address);
+            AddressableLoader.Instance.ReleaseScriptableObject(Address);
         }
     }
 }

@@ -5,15 +5,17 @@ using UnityEngine;
 namespace AzoneFramework
 {
     /// <summary>
-    /// 预制体基类
-    /// 所有从AB资产中加载的预制体都应该继承此类
+    /// 模型基类
+    /// 所有从AB资产中加载的模型都应该继承此类
     /// </summary>
-    public class PrefabBase : MonoBehaviour, IAddresableObect
+    public class ModelBase : MonoBehaviour, IAddresableObect
     {
         /// <summary>
         /// 资产地址
         /// </summary>
         public string Address { get; set; }
+
+        protected Transform _cacheTrans;
 
         void OnDestroy()
         {
@@ -27,6 +29,7 @@ namespace AzoneFramework
         public void OnCreate(string address)
         {
             Address = address;
+            _cacheTrans = transform;
         }
 
         /// <summary>
@@ -34,7 +37,7 @@ namespace AzoneFramework
         /// </summary>
         public void DestoryInstance()
         {
-            AddressableLoader.Instance.DestroyInstance(Address);
+            AddressableLoader.Instance.ReleaseModel(Address);
         }
     }
 }
