@@ -38,11 +38,12 @@ namespace AzoneFramework
         /// <param name="listener"></param>
         public void Listen(T eventID, Listener listener)
         {
-            if (_eventDict[eventID] != null)
+            if (!_eventDict.ContainsKey(eventID))
             {
-                _eventDict[eventID] -= listener;
+                _eventDict.Add(eventID, listener);
             }
 
+            _eventDict[eventID] -= listener;
             _eventDict[eventID] += listener;
         }
 
@@ -53,7 +54,7 @@ namespace AzoneFramework
         /// <param name="listener"></param>
         public void Remove(T eventID, Listener listener)
         {
-            if (_eventDict[eventID] == null)
+            if (!_eventDict.ContainsKey(eventID))
             {
                 return;
             }

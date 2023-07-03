@@ -19,6 +19,7 @@ namespace AzoneFramework
 
         /* UI事件 101 - 199 */
         UIModuleInitSuccess = 101,      // UI模块初始化成功
+        LoadResidentPanel   = 102,      // 加载常驻界面
     }
 
     public class FrameEvent : EventDispatcher<EFrameEventID> { }

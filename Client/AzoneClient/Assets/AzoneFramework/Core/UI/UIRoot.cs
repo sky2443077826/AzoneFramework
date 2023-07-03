@@ -27,7 +27,10 @@ namespace AzoneFramework
             // ³Ö¾Ã±£³Ö
             DontDestroyOnLoad(gameObject);
             _count++;
+        }
 
+        private void Start()
+        {
             FrameEvent.Instance.Dispatch(EFrameEventID.UIModuleInitSuccess);
         }
     }

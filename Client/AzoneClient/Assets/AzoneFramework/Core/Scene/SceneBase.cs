@@ -50,10 +50,13 @@ namespace AzoneFramework
         /// </summary>
         public virtual void OnLoadStart()
         {
+            UIManager.Instance.OpenPanel(EUIPanelDefine.LoadingPanel);
+
             // 派发场景加载开始事件
             DataList dataList = DataList.Get();
             FrameEvent.Instance.Dispatch(EFrameEventID.OnLoadSceneStart, dataList.AddInt((int)config.define));
             dataList.Dispose();
+
         }
 
         /// <summary>
@@ -93,9 +96,16 @@ namespace AzoneFramework
         {
             Show = true;
 
+            UIManager.Instance.ClosePanel(EUIPanelDefine.LoadingPanel);
+
             // 派发场景加载之后事件
             DataList dataList = DataList.Get();
             FrameEvent.Instance.Dispatch(EFrameEventID.AfterSceneLoad, dataList.AddInt((int)config.define));
+            dataList.Dispose();
+
+            // 派发加载常驻UI事件
+            dataList = DataList.Get();
+            FrameEvent.Instance.Dispatch(EFrameEventID.LoadResidentPanel, dataList.AddInt((int)config.residentPanel));
             dataList.Dispose();
         }
 

@@ -25,5 +25,21 @@ namespace AzoneFramework
 
             return component;
         }
+
+        /// <summary>
+        /// 添加或者获取组件
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="gameObject"></param>
+        /// <returns></returns>
+        public static Component GetOrAddComponent(this GameObject gameObject, Type type)
+        {
+            if (!gameObject.TryGetComponent(type, out Component component))
+            {
+                component = gameObject.AddComponent(type);
+            }
+
+            return component;
+        }
     }
 }

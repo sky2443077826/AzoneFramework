@@ -33,6 +33,9 @@ namespace AzoneFramework
 
         [Header("ÊÇ·ñ")]
         public bool isAddressbale;
+
+        [Header("³£×¤Ãæ°å")]
+        public EUIPanelDefine residentPanel;
     }
 
     /// <summary>

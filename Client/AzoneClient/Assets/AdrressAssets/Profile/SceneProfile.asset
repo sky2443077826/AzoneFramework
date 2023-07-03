@@ -15,5 +15,6 @@ MonoBehaviour:
   configs:
   - define: 1
     SceneName: MainScene
-    isAddressbale: 0
     scriptType: MainScene
+    isAddressbale: 0
+    residentPanel: 2

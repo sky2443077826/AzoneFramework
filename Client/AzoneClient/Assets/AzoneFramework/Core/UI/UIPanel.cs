@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace AzoneFramework
     {
         /// <summary>
         /// 关闭位置。
-        /// 当面板被关闭时，移动到视野之外。避免CPU开销。
+        /// 当面板隐藏时，移动到视野之外。避免CPU开销。
         /// </summary>
         private static readonly Vector3 _CLOSE_POS = new Vector3(99999, 99999, 0);
 
@@ -20,6 +21,11 @@ namespace AzoneFramework
         /// 显示参数
         /// </summary>
         private DataList _openArgs;
+
+        /// <summary>
+        /// 画布组件
+        /// </summary>
+        private Canvas _canvas;
 
         /// <summary>
         /// 面板配置
@@ -34,6 +40,13 @@ namespace AzoneFramework
         /// </summary>
         protected override void OnCreate()
         {
+            _canvas = GetComponent<Canvas>();
+            if (_canvas == null)
+            {
+                GameLog.Error($"创建UI面板失败！---> 面板{Config.define}未找到Canvas组件。");
+                return;
+            }
+
             OnPanelCreate();
         }
 
@@ -98,9 +111,12 @@ namespace AzoneFramework
         /// <summary>
         /// 打开
         /// </summary>
-        public void Open(DataList args)
+        public void Open(DataList args = null)
         {
-            _openArgs = args.Copy();
+            if (args != null)
+            {
+                _openArgs = args.Copy();
+            }
             Show();
         }
 
@@ -132,6 +148,15 @@ namespace AzoneFramework
 
             _openArgs?.Dispose();
             _openArgs = null;
+        }
+
+        /// <summary>
+        /// 设置渲染层级
+        /// </summary>
+        /// <param name="order"></param>
+        public void SetSortingOrder(int order)
+        {
+            _canvas.sortingOrder = order;
         }
     }
 }

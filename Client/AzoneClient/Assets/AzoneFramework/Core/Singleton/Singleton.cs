@@ -37,6 +37,7 @@ namespace AzoneFramework
         protected virtual void OnDispose()
         {
             GameLog.Normal($"===Ä£¿é{typeof(T).Name}Ïú»Ù===");
+            _instance = null;
         }
 
         #endregion

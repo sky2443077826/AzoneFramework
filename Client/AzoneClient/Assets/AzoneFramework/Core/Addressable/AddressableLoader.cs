@@ -284,7 +284,7 @@ namespace AzoneFramework
         /// <typeparam name="T"></typeparam>
         /// <param name="address"></param>
         /// <returns></returns>
-        public T InstantiateUI<T>(string address) where T : UIBase
+        public UIBase InstantiateUI(string address, Type scriptType = null)
         {
             if (string.IsNullOrEmpty(address))
             {
@@ -311,7 +311,19 @@ namespace AzoneFramework
                 return null;
             }
 
-            T uiBase = gameObject.GetOrAddComponent<T>();
+
+            if (scriptType == null)
+            {
+                scriptType = typeof(UIBase);
+            }
+
+            UIBase uiBase = gameObject.GetOrAddComponent(scriptType) as UIBase;
+            if (uiBase == null)
+            {
+                GameLog.Error($"实例化UI失败！---> 资产：{address}不能添加组件{scriptType.Name}。");
+                return null;
+            }
+
             uiBase.OnLoad(address);
             assetRef.AddCount();
 

@@ -14,5 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   panelConfigs:
   - define: 1
-    address: LodingPanel
-    scriptType: LodingPanel
+    address: LoadingPanel
+    scriptType: LoadingPanel
+    type: 3
+  - define: 2
+    address: StartPanel
+    scriptType: StartPanel
+    type: 0

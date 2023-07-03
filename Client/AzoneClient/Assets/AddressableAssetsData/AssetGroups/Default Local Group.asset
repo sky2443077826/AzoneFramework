@@ -33,6 +33,14 @@ MonoBehaviour:
     m_Address: UIProfile
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 108b00afcaee4b4429a5965b5e3353e1
+    m_Address: LoadingPanel
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: d07efffdebc676c4ba76d66b68da81aa
+    m_Address: StartPanel
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 2a80a07e88c76d549af56951e7b1f56a, type: 2}
   m_SchemaSet:
