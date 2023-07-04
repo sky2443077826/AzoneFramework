@@ -40,7 +40,12 @@ namespace AzoneFramework
         public void OnDestroy()
         {
             OnDispose();
-            AddressableLoader.Instance.ReleaseUI(Address);
+
+            if (Address != null)
+            {
+                ReleaseAllSprite();
+                AddressableLoader.Instance.ReleaseUI(Address);
+            }
         }
 
         /// <summary>
@@ -62,5 +67,46 @@ namespace AzoneFramework
         protected virtual void OnDispose() { }
 
         #endregion
+
+        /// <summary>
+        /// 加载精灵图
+        /// </summary>
+        /// <param name="spriteAddress"></param>
+        protected Sprite LoadSprite(string spriteAddress)
+        {
+            // 从缓存中加载
+            if (_spriteCaches.TryGetValue(spriteAddress, out Sprite sprite))
+            {
+                return sprite;
+            }
+
+            // 从资产中加载
+            sprite = AddressableLoader.Instance.LoadSprite(spriteAddress);
+            if (sprite != null)
+            {
+                // 存入缓存
+                _spriteCaches[spriteAddress] = sprite;
+            }
+
+            return sprite;
+        }
+
+        /// <summary>
+        /// 释放所有加载的精灵图资源
+        /// </summary>
+        protected void ReleaseAllSprite()
+        {
+            if (_spriteCaches == null || _spriteCaches.Count <= 0)
+            {
+                return;
+            }
+
+            foreach (var address in _spriteCaches.Keys)
+            {
+                AddressableLoader.Instance.UnLoadSprite(address);
+            }
+
+            _spriteCaches.Clear();
+        }
     }
 }

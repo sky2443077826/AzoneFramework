@@ -143,6 +143,7 @@ namespace AzoneFramework
                 while (realProgress - simulateProgress > 0.1f)
                 {
                     simulateProgress += 0.01f;
+                    _currentLoadScene.Progress = simulateProgress * 0.8f;
                     yield return Yielder.endOfFrame;
                 }
 
@@ -150,8 +151,8 @@ namespace AzoneFramework
                 {
                     simulateProgress = 1;
                 }
-                _currentLoadScene.Progress = simulateProgress * 0.8f;
 
+                _currentLoadScene.Progress = simulateProgress * 0.8f;
                 if (IsSceneLoadEnd(config.isAddressbale))
                 {
                     break;

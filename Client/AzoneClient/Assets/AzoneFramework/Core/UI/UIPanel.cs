@@ -61,50 +61,32 @@ namespace AzoneFramework
         /// <summary>
         /// 面板创建
         /// </summary>
-        protected virtual void OnPanelCreate()
-        {
-
-        }
+        protected virtual void OnPanelCreate() { }
 
         /// <summary>
         /// 面板打开
         /// </summary>
-        protected virtual void OnPanelOpen()
-        {
-
-        }
+        protected virtual void OnPanelOpen() { }
 
         /// <summary>
         /// 面板显示
         /// </summary>
-        protected virtual void OnPanelShow()
-        {
-
-        }
+        protected virtual void OnPanelShow() { }
 
         /// <summary>
         /// 面板隐藏
         /// </summary>
-        protected virtual void OnPanelHide()
-        {
-
-        }
+        protected virtual void OnPanelHide() { }
 
         /// <summary>
         /// 面板关闭
         /// </summary>
-        protected virtual void OnPanelClose()
-        {
-
-        }
+        protected virtual void OnPanelClose() { }
 
         /// <summary>
         /// 面板销毁
         /// </summary>
-        protected virtual void OnPanelDestroy()
-        {
-
-        }
+        protected virtual void OnPanelDestroy() { }
 
         #endregion
 
