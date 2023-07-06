@@ -211,7 +211,7 @@ GameObject:
   - component: {fileID: 3376306593164439202}
   - component: {fileID: 3376306593164439204}
   m_Layer: 5
-  m_Name: UIComProgress
+  m_Name: AZProgress
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

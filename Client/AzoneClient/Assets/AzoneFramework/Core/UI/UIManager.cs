@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace AzoneFramework
 {
@@ -190,6 +191,8 @@ namespace AzoneFramework
             base.OnDispose();
         }
 
+
+        #region 面板管理
 
         /// <summary>
         /// 将面板弹到顶部
@@ -575,6 +578,8 @@ namespace AzoneFramework
             //刷新层级
             RefreshPanelSortingOrder();
         }
+
+        #endregion
 
         #region 事件回调
 

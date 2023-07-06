@@ -2,15 +2,23 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace AzoneFramework 
+namespace AzoneFramework
 {
     /// <summary>
     /// UI组件-进度条
     /// </summary>
-    public class UIComProgress : UIComponent
-    {
+    public class AZProgress : UIComponent, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+    { 
+        /*
+         * 输入事件
+         */
+        public event PointerEvent onClick;
+        public event PointerEvent onPointerEnter;
+        public event PointerEvent onPointerExit;
+
         [Header("外框组件")]
         public Image imgFrame;
 
@@ -221,12 +229,36 @@ namespace AzoneFramework
             imgFrame.color = _frameColor = color;
         }
 
+
+
+
 #if UNITY_EDITOR
         private void OnValidate()
         {
             RefreshProgress();
         }
 #endif
+
+        #region UI输入事件
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            onClick?.Invoke(eventData, this);
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            onPointerEnter?.Invoke(eventData, this);
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            onPointerExit?.Invoke(eventData, this);
+        }
+
+        #endregion
+
+
 
     }
 }

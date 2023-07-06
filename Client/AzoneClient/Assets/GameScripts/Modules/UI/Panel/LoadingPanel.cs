@@ -10,12 +10,9 @@ using UnityEngine;
 public class LoadingPanel : UIPanel
 {
     // 加载进度条
-    public UIComProgress progLoading;
-
+    public AZProgress progLoading;
 
     #region 生命周期
-
-    #endregion
 
     protected override void OnPanelCreate()
     {
@@ -43,6 +40,10 @@ public class LoadingPanel : UIPanel
     {
     }
 
+    #endregion
+
+    #region 事件回调
+
     /// <summary>
     /// 场景加载中
     /// </summary>
@@ -58,4 +59,7 @@ public class LoadingPanel : UIPanel
         float progress = dataList.ReadFloat(1);
         progLoading.Value = progress;
     }
+
+    #endregion
+
 }
