@@ -1539,7 +1539,7 @@ namespace AzoneFramework
         {
             if (node == null) return false;
             // string xpath = "./*[not (name() = 'Record') and not (name() = 'Property')]";
-            XmlNodeList childNodeList = node.SelectNodes(AZConstant.kParseChildXPath);
+            XmlNodeList childNodeList = node.SelectNodes(GameConstant.kParseChildXPath);
             foreach (XmlNode childNode in childNodeList)
             {
                 // 获取对象名

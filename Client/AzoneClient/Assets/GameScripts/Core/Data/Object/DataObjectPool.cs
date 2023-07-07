@@ -56,7 +56,7 @@ namespace AzoneFramework
 
             if (!_dataPools.TryGetValue(configID, out Queue<IDataObject> queue))
             {
-                queue = new Queue<IDataObject>(AZConstant.kMaxPoolCacheCount);
+                queue = new Queue<IDataObject>(GameConstant.kMaxPoolCacheCount);
             }
 
             return queue;
@@ -109,7 +109,7 @@ namespace AzoneFramework
             obj.Dispose();
 
             Queue<IDataObject> queue = GetQueueByConfigID(obj.ConfigID);
-            if (queue != null && queue.Count < AZConstant.kMaxPoolCacheCount)
+            if (queue != null && queue.Count < GameConstant.kMaxPoolCacheCount)
             {
                 queue.Enqueue(obj);
                 return;
