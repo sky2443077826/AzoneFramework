@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<XML>
+    <Property>
+        <Prop ID="ID" Type="int" Save="1" Desc="配置ID" />
+        <Prop ID="Class" Type="string" Save="0" Desc="逻辑类名" />
+        <Prop ID="Name" Type="string" Save="1" Desc="配置名称" />
+        <Prop ID="Type" Type="int" Save="0" Desc="对象类型" />
+        <Prop ID="UID" Type="ulong" Save="0" Desc="对象唯一ID" />
+        <Prop ID="Capacity" Type="int" Save="0" Desc="对象容量" />
+    </Property>
+    <Record>
+    </Record>
+    <Include>
+    </Include>
+</XML>

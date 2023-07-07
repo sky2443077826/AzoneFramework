@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!--
+    对象逻辑类定义
+    
+    <Class ID="Plant" Struct="Plant.xml" Data="Plant.xml" Desc="植物" />
+-->
+<XML>
+    <Class ID="ViewPort" Struct="ViewPort.xml" Data="ViewPort.xml" Desc="视图" />
+    <Class ID="Role" Struct="Role.xml" Data="Role.xml" Desc="角色" />
+</XML>

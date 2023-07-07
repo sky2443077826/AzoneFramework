@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<XML>
+  <Data ID="11001" Desc="男角色" Gender="1" MaxItems="100" Capacity="12" />
+  <Data ID="12002" Desc="女角色" Gender="2" MaxItems="100" Capacity="12" />
+</XML>

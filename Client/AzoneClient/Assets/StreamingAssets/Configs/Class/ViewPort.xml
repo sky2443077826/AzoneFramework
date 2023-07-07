@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<XML>
+    <Property>
+        <Prop ID="ViewType" Type="int" Save="0" Desc="视图类型" />
+    </Property>
+    <Include>
+        <Inc ID="Base/BaseObject.xml" Desc="基本对象基类" />
+    </Include>
+</XML>

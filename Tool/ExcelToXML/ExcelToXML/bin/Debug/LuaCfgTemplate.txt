@@ -1,0 +1,20 @@
+-- #EXCEL#
+local #NAME# = {
+    IDList = {
+#IDLIST#
+    },
+    count = #COUNT#,
+    datas = {
+#CONTENT#
+    }
+}
+
+function #NAME#:GetDataByIndex(index)
+	return self[self.IDList[index]]
+end
+
+function #NAME#:IndexOfID(id)
+	return table.indexOf(self.IDList, id) or -1
+end
+
+return #NAME#

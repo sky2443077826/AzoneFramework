@@ -97,55 +97,6 @@ public class AZConstant
     public const int kInventoryMaxRow = 3;
 
     /// <summary>
-    /// 游戏中1分钟对应现实中多少秒
-    /// 游戏1分钟 -> 1s 
-    /// 游戏1分钟 -> 0.8s
-    /// 游戏1分钟 -> 0.6s
-    /// NOTE: 
-    /// 1GameDay = 1GameHour * kGameHourPerDay(24) = 24GameHour
-    /// 有效游戏时间 = 1GameDay - 4GameHour(2个时辰) = 24GameHour - 4GameHour= 20GameHour
-    /// 1s -> 1GameHour = 1s * 60 = 60s = 1min   GameDay:24min  有效游戏时间:20min
-    /// 0.8s -> 1GameHour = 0.8s * 60 = 0.48min   GameDay:19.2min  有效游戏时间:16min
-    /// 0.6s -> 1GameHour = 0.6s * 60 = 0.36min   GameDay:14.4min  有效游戏时间:12min
-    /// </summary>
-    public const float kGameMin2RealSecond = 0.8f;
-
-    /// <summary>
-    /// 游戏内一个小时多少分钟
-    /// </summary>
-    public const int kGameMinPerHour = 60;
-
-    /// <summary>
-    /// 游戏时间一天多少个小时
-    /// </summary>
-    public const int kGameHourPerDay = 24;
-
-    /// <summary>
-    /// 游戏时间一个月多少天
-    /// </summary>
-    public const int kGameDayPerMonth = 30;
-
-    /// <summary>
-    /// 游戏中一年几个月
-    /// </summary>
-    public const int kGameMonthPerYear = 4;
-
-    /// <summary>
-    /// 游戏起始小时 卯时 5 - 7
-    /// </summary>
-    public const int kStartGameHour = 5;
-
-    /// <summary>
-    /// 11点提示玩家
-    /// </summary>
-    public const int kAlertGameHour = 11;
-
-    /// <summary>
-    /// 强制睡觉时间
-    /// </summary>
-    public const int kForceSleepHour = 1;
-
-    /// <summary>
     /// 对象池最大缓存数量
     /// </summary>
     public const int kMaxPoolCacheCount = 10;
@@ -154,31 +105,6 @@ public class AZConstant
     /// 每帧加载Mono对象最大数量
     /// </summary>
     public const int kMaxLoadMonoCountPerFrame = 10;
-
-    /// <summary>
-    /// 掉落范围格子，1表示[角色]周围1格，即九宫格。
-    /// </summary>
-    public const int kDropRange = 1;
-
-    /// <summary>
-    /// 掉落的两个道具的最小间距
-    /// </summary>
-    public const float kDropItemDistance = 0.3f;
-
-    /// <summary>
-    /// 树成长限制阶段，需要判断能否生长了。
-    /// </summary>
-    public const int kTreeLimitPhase = 2;
-
-    /// <summary>
-    /// 树最大占地半径
-    /// </summary>
-    public const int kMaxTreeRange = 1;
-
-    /// <summary>
-    /// 最大奇遇掉落半径
-    /// </summary>
-    public const int kMaxAdventureRange = 2;
     #endregion
 
     #region 表格
@@ -193,11 +119,6 @@ public class AZConstant
     /// 从xml中解析子对象的xpath路径
     /// </summary>
     public const string kParseChildXPath = "./*[not (name() = 'Record') and not (name() = 'Property')]";
-
-    /// <summary>
-    /// 精灵资源地址
-    /// </summary>
-    public const string kSpriteAddressStr = "[{0}]";
 
     #endregion
 }

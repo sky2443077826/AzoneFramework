@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<XML>
+    <Property>
+        <Prop ID="RID" Type="int" Save="1" Desc="角色ID" />
+        <Prop ID="NickName" Type="string" Save="1" Desc="昵称" />
+        <Prop ID="Gender" Type="int" Save="1" Desc="性别" />
+        <Prop ID="LastSave" Type="long" Save="1" Desc="上次存储时间" />
+        <Prop ID="MaxItems" Type="int" Save="1" Desc="最大可以携带的道具数量" />
+    </Property>
+    <Record>
+    </Record>
+    <Include>
+        <Inc ID="Base/BaseObject.xml" Desc="对象基类" />
+    </Include>
+</XML>
