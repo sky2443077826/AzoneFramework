@@ -30,6 +30,25 @@ namespace AzoneFramework
             return value;
         }
 
+        /// <summary>
+        /// Æ´½Ó
+        /// </summary>
+        /// <param name="args"></param>
+        /// <returns></returns>
+        public static string Concat(params object[] args)
+        {
+            globalBuilder.Clear();
+            if (args == null)
+            {
+                return string.Empty;
+            }
+            for (int i = 0; i < args.Length; i++)
+            {
+                globalBuilder.Append(args[i]);
+            }
+            return globalBuilder.ToString();
+        }
+
         #endregion
 
 
