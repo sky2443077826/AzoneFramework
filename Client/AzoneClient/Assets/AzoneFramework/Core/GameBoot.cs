@@ -1,4 +1,5 @@
 using AzoneFramework.Addressable;
+using AzoneFramework.Controller;
 using AzoneFramework.Scene;
 using AzoneFramework.UI;
 using System;
@@ -34,13 +35,12 @@ namespace AzoneFramework
             FrameEvent.Instance.Create();
             FrameEvent.Instance.Listen(EFrameEventID.UIModuleInitSuccess, OnUIModuleInitSuccess);
 
-            // 创建GameMono单例
+            // 创建GameMono对象
             GameMonoRoot.CreateInstance();
-            // 创建游戏世界
-            GameMonoRoot.Instance.AddMonoSingleton(GameWorld.Create());
-
             // 初始化资源加载器
             AddressableLoader.Instance.Create();
+            // 控制器管理器
+            ControllerManager.Instance.Create();
             // 初始化场景加载器
             SceneLoader.Instance.Create();
             // 初始化UI管理器
@@ -53,7 +53,9 @@ namespace AzoneFramework
         private void LaunchGame()
         {
             GameLog.Normal("===游戏启动===");
-            GameWorld.Instance.EnterGameWorld();
+            // 创建游戏世界控制器
+            GameWorldController worldController = ControllerManager.Instance.CreateController<GameWorldController>(EControllerDefine.GameWorld);
+            worldController.EnterGameWorld();
         }
 
         /// <summary>

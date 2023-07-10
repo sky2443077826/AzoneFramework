@@ -1,4 +1,5 @@
 using AzoneFramework;
+using AzoneFramework.Controller;
 using AzoneFramework.Scene;
 using System;
 using System.Collections;
@@ -6,28 +7,18 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// 游戏世界总入口
+/// 游戏世界总控制器
 /// </summary>
-public class GameWorld : MonoSingleton<GameWorld>, IMonoSingleton
+public class GameWorldController : ControllerBase
 {
-    public void OnCreate()
+    internal override void OnCreate()
     {
+        base.OnCreate();
     }
 
-    public void OnFixedUpdate()
+    internal override void OnDispose()
     {
-    }
-
-    public void OnLateUpdate()
-    {
-    }
-
-    public void OnUpdate()
-    {
-    }
-
-    public void OnDispose()
-    {
+        base.OnDispose();
     }
 
     /// <summary>
@@ -38,3 +29,5 @@ public class GameWorld : MonoSingleton<GameWorld>, IMonoSingleton
         SceneLoader.Instance.EnterScene(ESceneDefine.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single);
     }
 }
+
+

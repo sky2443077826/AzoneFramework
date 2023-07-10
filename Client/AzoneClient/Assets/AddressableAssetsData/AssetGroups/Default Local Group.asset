@@ -41,6 +41,10 @@ MonoBehaviour:
     m_Address: StartPanel
     m_ReadOnly: 0
     m_SerializedLabels: []
+  - m_GUID: 3b992bb4034fad94fba5a27d63cf1a53
+    m_Address: ControllerProfile
+    m_ReadOnly: 0
+    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 2a80a07e88c76d549af56951e7b1f56a, type: 2}
   m_SchemaSet:

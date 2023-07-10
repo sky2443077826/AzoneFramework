@@ -5,18 +5,15 @@ using UnityEngine;
 
 namespace AzoneFramework
 {
+    /// <summary>
+    /// 游戏Mono根对象
+    /// </summary>
     public class GameMonoRoot : MonoBehaviour
     {
-
         /// <summary>
         /// 单例
         /// </summary>
         public static GameMonoRoot Instance { get; private set; }
-
-        /// <summary>
-        /// mono单例类
-        /// </summary>
-        private List<IMonoSingleton> _singletons;
 
         /* 游戏更新事件 */ 
         private event Action _onFixedUpdate;
@@ -30,58 +27,25 @@ namespace AzoneFramework
                 DestroyImmediate(this.gameObject);
             }
 
-            _singletons = new List<IMonoSingleton>();
         }
 
         private void FixedUpdate()
         {
-            for (int i = 0; i < _singletons.Count; i++)
-            {
-                if (_singletons[i] != null)
-                {
-                    _singletons[i].OnFixedUpdate();
-                }
-            }
-
             _onFixedUpdate?.Invoke();
         }
 
         private void Update()
         {
-            for (int i = 0; i < _singletons.Count; i++)
-            {
-                if (_singletons[i] != null)
-                {
-                    _singletons[i].OnUpdate();
-                }
-            }
             _onUpdate?.Invoke();
         }
 
         private void LateUpdate()
         {
-            for (int i = 0; i < _singletons.Count; i++)
-            {
-                if (_singletons[i] != null)
-                {
-                    _singletons[i].OnLateUpdate();
-                }
-            }
-
             _onLateUpdate?.Invoke();
         }
 
         private void OnDestroy()
         {
-            if (_singletons != null)
-            {
-                foreach (var monoSingleton in _singletons)
-                {
-                    monoSingleton?.OnDispose();
-                }
-                _singletons.Clear();
-                _singletons = null;
-            }
             _onFixedUpdate = null;
             _onLateUpdate = null;
             _onUpdate = null;
@@ -161,25 +125,6 @@ namespace AzoneFramework
             {
                 _onLateUpdate -= action;
             }
-        }
-
-        #endregion
-
-        #region 单例管理
-
-        public void AddMonoSingleton(IMonoSingleton monoSingleton)
-        {
-            if (_singletons.Contains(monoSingleton))
-            {
-                return;
-            }
-
-            _singletons.Add(monoSingleton);
-        }
-
-        public void RemoveMonoSingleton(IMonoSingleton monoSingleton)
-        {
-            _singletons.Remove(monoSingleton);
         }
 
         #endregion
