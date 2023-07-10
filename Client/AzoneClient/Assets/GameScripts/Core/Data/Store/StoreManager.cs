@@ -176,6 +176,7 @@ public class StoreManager : Singleton<StoreManager>
 
         string saveFile = $"{GameConstant.STORE_SAVE_PATH}/{CurSaveData.NickName}_{CurSaveData.RID}.xml";
 
+        // 创建文档结点
         XmlDocument xmlDocument = new XmlDocument();
         XmlNode decNode = xmlDocument.CreateXmlDeclaration("1.0", "UTF-8", null);
         xmlDocument.AppendChild(decNode);

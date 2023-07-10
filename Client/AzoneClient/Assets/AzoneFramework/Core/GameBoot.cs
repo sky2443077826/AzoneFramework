@@ -36,6 +36,8 @@ namespace AzoneFramework
 
             // 创建GameMono单例
             GameMonoRoot.CreateInstance();
+            // 创建游戏世界
+            GameMonoRoot.Instance.AddMonoSingleton(GameWorld.Create());
 
             // 初始化资源加载器
             AddressableLoader.Instance.Create();
@@ -43,7 +45,6 @@ namespace AzoneFramework
             SceneLoader.Instance.Create();
             // 初始化UI管理器
             UIManager.Instance.Create();
-
         }
 
         /// <summary>
@@ -52,7 +53,7 @@ namespace AzoneFramework
         private void LaunchGame()
         {
             GameLog.Normal("===游戏启动===");
-            SceneLoader.Instance.EnterScene(ESceneDefine.MainScene, UnityEngine.SceneManagement.LoadSceneMode.Single);
+            GameWorld.Instance.EnterGameWorld();
         }
 
         /// <summary>

@@ -38,20 +38,6 @@ namespace AzoneFramework
             }
         }
 
-        #region 生命周期
-
-        protected virtual void OnCreate()
-        {
-
-        }
-
-        protected virtual void OnDispose()
-        {
-
-        }
-
-        #endregion
-
         /// <summary>
         /// 创建单例
         /// </summary>
