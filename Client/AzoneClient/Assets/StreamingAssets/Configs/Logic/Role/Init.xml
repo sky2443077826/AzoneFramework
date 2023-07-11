@@ -1,0 +1,13 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<!-- 
+Inventory: 背包初始化道具
+        <Item ID="102001" Count="1" Desc="木铲子" />
+        <Item ID="103001" Count="1" Desc="鱼竿1" />
+        <Item ID="104001" Count="1" Desc="水桶1" />
+-->
+<XML>
+	<Inventory>
+    </Inventory>
+	<Record>
+    </Record>
+</XML>

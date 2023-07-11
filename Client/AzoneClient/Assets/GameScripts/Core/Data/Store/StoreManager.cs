@@ -36,12 +36,17 @@ public class StoreManager : Singleton<StoreManager>
             return;
         }
 
+        // 初始化模块
+        InitManager.Instance.Create();
+
         LoadAllSaves();
     }
 
     protected override void OnDispose()
     {
         base.OnDispose();
+
+        InitManager.Instance.Dispose();
 
         _saveDatas.Clear();
         _saveDatas = null;
@@ -144,7 +149,7 @@ public class StoreManager : Singleton<StoreManager>
         saveData.LastSaveTime = lastSaveTime;
 
         // 角色数据
-        XmlNode roleNode = save.SelectSingleNode("RoleData");
+        XmlElement roleNode = save.SelectSingleNode("RoleData") as XmlElement;
         if (roleNode == null)
         {
             GameLog.Error($"加载存档错误！--->角色数据不存在{rID}。");
@@ -166,11 +171,167 @@ public class StoreManager : Singleton<StoreManager>
 
     #region 写入文件
 
-    public void WriteSaveData()
+    /// <summary>
+    /// 创建新存档
+    /// </summary>
+    public void CreateNewSave(string nickName, eGender gender)
     {
-        if (CurSaveData == null)
+        if (string.IsNullOrEmpty(nickName))
         {
-            GameLog.Error("写入存档失败！---> 当前存档数据为空。");
+            GameLog.Error($"创建新存档失败！---> 角色名称【{nickName}】不合法。");
+            return;
+        }
+
+        SaveData saveData = new SaveData();
+        saveData.NickName = nickName;
+        saveData.RID = DataUtility.GenerateRID();
+
+        // 根据性别获取指定的配置ID
+        int config = DataUtility.Instance.GetRoleConfig(gender);
+        if (config == 0)
+        {
+            GameLog.Error("没有默认的角色可以使用。");
+            return;
+        }
+        saveData.Config = config;
+
+        // 创建角色
+
+
+        _saveDatas[saveData.RID] = saveData;
+        WriteSaveData(saveData.RID);
+    }
+
+    /// <summary>
+    /// 序列化角色信息
+    /// </summary>
+    /// <param name="root"></param>
+    private bool SerializeRole(SaveData saveData)
+    {
+        if (saveData == null || saveData.roleData == null) return false;
+
+        /*
+         *      序列化角色属性以及表格
+         */
+
+        // 创建角色
+        RoleObject roleObject = new RoleObject();
+
+        // 初始化基础数据
+        roleObject.Init(saveData.Config);
+        roleObject.SetString("NickName", saveData.NickName);
+        roleObject.SetInt("RID", saveData.RID);
+        roleObject.SetLong("LastSave", DateTimeOffset.Now.ToUnixTimeSeconds());
+
+        // 序列化角色
+        roleObject.SerializeToXml(saveData.roleData);
+
+        /*
+         *      初始化基础表格信息
+         */
+        RecordManager initRecMgr = InitManager.Instance.InitRecMgr;
+        if (initRecMgr != null)
+        {
+            // 获取表格名
+            initRecMgr.GetRecordList(out List<string> records, true);
+            foreach (string recName in records)
+            {
+                if (string.IsNullOrEmpty(recName)) continue;
+
+                // 获取表格节点
+                XmlNode recNode = saveData.roleData.SelectSingleNode("Role/Record/" + recName) as XmlElement;
+                if (recNode == null) continue;
+
+                // 获取表格结构
+                Record rec = initRecMgr.GetRecord(recName);
+                if (rec == null) continue;
+
+                for (int row = 0; row < rec.MaxRowCount; ++row)
+                {
+                    if (!rec.CheckRowUse(row)) continue;
+
+                    // 获取表格数据
+                    DataList rowData = rec.GetRowData(row);
+                    XmlElement rowNode = saveData.roleData.OwnerDocument.CreateElement("Row");
+
+                    for (int index = 0; index < rowData.Count; ++index)
+                    {
+                        VariableData data = rowData.ReadVar(index);
+                        // 获取tag
+                        string tag = rec.GetTagByColumn(index);
+                        if (string.IsNullOrEmpty(tag) || data == null) continue;
+
+                        rowNode.SetAttribute(tag, data.ToString());
+                    }
+
+                    recNode.AppendChild(rowNode);
+                }
+            }
+        }
+
+        /*
+         *      序列化角色背包
+         */
+        // 获取角色节点
+        //XmlElement roleNode = root.SelectSingleNode("Role") as XmlElement;
+        //if (roleNode == null) return false;
+        //Inventory bag = new Inventory();
+        //int bagID = DataUtility.Instance.GetViewPortConfig(eViewPort.Inventory);
+        //bag.Init(bagID);
+
+        //XmlElement bagNode = root.OwnerDocument.CreateElement(bag.GetString("Class"));
+        //// 初始化背包属性
+        //bag.SerializeProperty(bagNode);
+
+        //foreach (var kv in QSInit.Instance.DefaultItems)
+        //{
+        //    // 道具id
+        //    int itemID = kv.Key;
+        //    // 道具数量
+        //    int itemCount = kv.Value;
+        //    if (itemCount <= 0)
+        //    {
+        //        GameLog.Error($"道具{itemID}数量为0，初始化角色添加背包道具失败");
+        //        continue;
+        //    }
+        //    DataObject item = new DataObject();
+        //    item.Init(itemID);
+        //    item.SetInt("Count", itemCount);
+        //    item.SerializeToXml(bagNode);
+        //}
+
+        //// 将背包格子添加到角色
+        //roleNode.AppendChild(bagNode);
+
+        /*
+         *      装备视图
+         */
+        // todo
+
+        /*
+         *      创建技能视图/鼠标视图
+         */
+        /*
+        SkillBox skillBox = new SkillBox();
+        skillBox.Init(QSCommon.Instance.GetViewPortConfig(eViewPort.SkillBox));
+        XmlElement skillBoxNode = root.OwnerDocument.CreateElement(skillBox.GetString("Class"));
+        skillBox.SerializeProperty(skillBoxNode);
+        roleNode.AppendChild(skillBoxNode);
+
+        CursorBox cursorBox = new CursorBox();
+        cursorBox.Init(QSCommon.Instance.GetViewPortConfig(eViewPort.CursorBox));
+        XmlElement cursorBoxNode = root.OwnerDocument.CreateElement(cursorBox.GetString("Class"));
+        cursorBox.SerializeProperty(cursorBoxNode);
+        roleNode.AppendChild(cursorBoxNode);
+        */
+        return true;
+    }
+
+    public void WriteSaveData(int RID)
+    {
+        if (!_saveDatas.TryGetValue(RID, out SaveData saveData))
+        {
+            GameLog.Error($"写入存档失败！---> 当前存档数据【{RID}】为空。");
             return;
         }
 

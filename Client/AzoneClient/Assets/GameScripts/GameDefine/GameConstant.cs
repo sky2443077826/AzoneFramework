@@ -7,9 +7,10 @@ public static class GameConstant
 
     #region 逻辑配置路径
     /// <summary>
-    /// 初始化数据
+    /// 角色初始化数据
     /// </summary>
-    public const string kInitialDataConfig = "Logic/InitialData.xml";
+    public const string ROLE_INIT_DATA_CONFIG_PATH = "Logic/Role/Init.xml";
+
 
     /// <summary>
     /// 本地化配置

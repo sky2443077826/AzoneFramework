@@ -13,8 +13,10 @@ namespace AzoneFramework
     {
         Invalid = 0,
 
+        // 启动场景
+        StartScene = 1,
         // 主场景
-        MainScene = 1,
+        MainScene = 2,
     }
 
     /// <summary>

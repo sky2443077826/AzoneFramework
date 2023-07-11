@@ -30,7 +30,7 @@ namespace AzoneFramework.UI
         /// <summary>
         /// 面板配置
         /// </summary>
-        public UIPanelConfig Config { get; private set; }
+        public UIPanelConfig Config { get; set; }
 
 
         #region 生命周期
@@ -99,6 +99,7 @@ namespace AzoneFramework.UI
             {
                 _openArgs = args.Copy();
             }
+            OnPanelOpen();
             Show();
         }
 

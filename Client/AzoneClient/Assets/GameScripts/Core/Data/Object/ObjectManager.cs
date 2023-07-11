@@ -36,7 +36,10 @@ namespace AzoneFramework
             _type2uidList = new Dictionary<eObjectType, List<ulong>>();
 
             // 数据对象池创建
-            DataPool.Instance.Create();
+            DataObjectPool.Instance.Create();
+            //数据对象工厂
+            ObjectFactory.Instance.Create();                    
+
         }
 
         /// <summary>
@@ -55,8 +58,10 @@ namespace AzoneFramework
 
             _objects.Clear();
             _type2uidList.Clear();
+            //数据对象工厂
+            ObjectFactory.Instance.Dispose();
             // 数据对象池释放
-            DataPool.Instance.Dispose();
+            DataObjectPool.Instance.Dispose();
         }
 
         /// <summary>
@@ -201,7 +206,7 @@ namespace AzoneFramework
             // 2. 初始化对象
             if (!dataObject.Init(config))
             {
-                DataPool.Instance.ReleaseObject(dataObject);
+                DataObjectPool.Instance.ReleaseObject(dataObject);
                 return 0;
             }
 
@@ -245,7 +250,7 @@ namespace AzoneFramework
             }
 
             // 创建对象
-            T dataObject = DataPool.Instance.FetchObject<T>(config);
+            T dataObject = DataObjectPool.Instance.FetchObject<T>(config);
             if (dataObject == null)
             {
                 return 0;
@@ -254,7 +259,7 @@ namespace AzoneFramework
             // 2. 初始化对象
             if (!dataObject.Init(config))
             {
-                DataPool.Instance.ReleaseObject(dataObject);
+                DataObjectPool.Instance.ReleaseObject(dataObject);
                 return 0;
             }
 
@@ -315,7 +320,7 @@ namespace AzoneFramework
                 uidlist.Remove(uid);
             }
 
-            DataPool.Instance.ReleaseObject(dataObject);
+            DataObjectPool.Instance.ReleaseObject(dataObject);
             _objects.Remove(uid);
 
             return true;
@@ -472,7 +477,7 @@ namespace AzoneFramework
             }
 
             // 销毁自已
-            DataPool.Instance.ReleaseObject(dataObject);
+            DataObjectPool.Instance.ReleaseObject(dataObject);
 
             // 移除子对象
             _objects.Remove(childUID);
@@ -514,7 +519,7 @@ namespace AzoneFramework
             }
 
             // 销毁自已
-            DataPool.Instance.ReleaseObject(childObj);
+            DataObjectPool.Instance.ReleaseObject(childObj);
 
             // 对象移除
             _objects.Remove(childObj.UID);

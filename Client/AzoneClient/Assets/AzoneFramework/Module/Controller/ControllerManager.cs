@@ -81,7 +81,7 @@ namespace AzoneFramework.Controller
             }
 
             // 创建控制器
-            Type scripType = Assembly.Load("Assembly-CSharp").GetType(config.scriptType);
+            Type scripType = Type.GetType(config.scriptType);
             if (scripType == null)
             {
                 GameLog.Error($"创建控制器失败！---> 未定义的控制器脚本【{config.scriptType}】");
@@ -90,11 +90,12 @@ namespace AzoneFramework.Controller
             controller = Activator.CreateInstance(scripType) as T;
             if (controller == null)
             {
-                GameLog.Error($"创建控制器失败！---> 控制器定义与脚本不匹配：【{define}】,【{typeof(T).Name}】");
+                GameLog.Error($"创建控制器失败！---> 控制器定义与脚本不匹配：【{define}】,【{config.scriptType}】");
                 return controller;
             }
 
             _controllers[define] = controller;
+            controller.OnCreate();
             return controller;
         }
 

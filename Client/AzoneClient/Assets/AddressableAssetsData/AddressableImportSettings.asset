@@ -14,4 +14,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rulesEnabled: 1
   allowGroupCreation: 0
-  rules: []
+  rules:
+  - path: Assets/AdrressAssets/Profile/*.asset
+    matchType: 0
+    groupName: Profile
+    groupTemplate: {fileID: 0}
+    groupTemplateApplicationMode: 1
+    labelRefs: []
+    dynamicLabels: []
+    LabelMode: 1
+    simplified: 1
+    addressReplacement: 
+  - path: Assets/AdrressAssets/UI/*.prefab
+    matchType: 0
+    groupName: UI
+    groupTemplate: {fileID: 0}
+    groupTemplateApplicationMode: 1
+    labelRefs: []
+    dynamicLabels: []
+    LabelMode: 1
+    simplified: 1
+    addressReplacement: 

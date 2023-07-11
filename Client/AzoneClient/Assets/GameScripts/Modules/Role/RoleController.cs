@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using UnityEngine;
 using AzoneFramework;
 using System;
+using AzoneFramework.Controller;
 
 /// <summary>
-/// 角色管理器
+/// 角色管理器（数据）
 /// </summary>
-public class RoleManager : Singleton<RoleManager>
+public class RoleController : ControllerBase
 {
     /// <summary>
     /// 主角
     /// </summary>
     public ulong MainRolUID { get; private set; }
 
-    protected override void OnCreate()
+    internal override void OnCreate()
     {
         base.OnCreate();
+
+        ObjectFactory.Instance.AddCreatedEvent(RoleCreated);
     }
 
-    protected override void OnDispose()
+    internal override void OnDispose()
     {
         base.OnDispose();
     }
@@ -69,5 +72,20 @@ public class RoleManager : Singleton<RoleManager>
         }
 
         return roleObject;
+    }
+
+    /// <summary>
+    /// 角色创建回调
+    /// </summary>
+    /// <param name="arg1"></param>
+    /// <param name="arg2"></param>
+    private void RoleCreated(eObjectType type, DataList args)
+    {
+        if (type != eObjectType.Role)
+        {
+            return;
+        }
+
+        SetMainRole(args.ReadULong(0));
     }
 }

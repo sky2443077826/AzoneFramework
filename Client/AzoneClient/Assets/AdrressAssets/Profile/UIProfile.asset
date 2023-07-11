@@ -21,3 +21,7 @@ MonoBehaviour:
     address: StartPanel
     scriptType: StartPanel
     type: 0
+  - define: 3
+    address: MainPanel
+    scriptType: MainPanel
+    type: 0

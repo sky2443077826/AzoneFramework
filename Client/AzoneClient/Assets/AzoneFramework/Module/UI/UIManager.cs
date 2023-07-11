@@ -253,6 +253,7 @@ namespace AzoneFramework.UI
                 return null;
             }
 
+            panel.Config = config;
             panel.Create();
             panel.transform.SetParent(Stage.transform);
             return panel;
@@ -415,6 +416,10 @@ namespace AzoneFramework.UI
                     UIPanel first = cacheList[0];
                     GameObject.Destroy(first.gameObject);
                     cacheList.RemoveAt(0);
+                }
+                else
+                {
+                    cacheList.Add(panel);
                 }
             }
         }
@@ -630,8 +635,9 @@ namespace AzoneFramework.UI
             if (_curResident != EUIPanelDefine.Invalid)
             {
                 // 关闭上一个
-                _openPanel[define]?.Close();
-                _openPanel.Remove(define);
+                UIPanel lastResident = _openPanel[_curResident];
+                _openPanel.Remove(_curResident);
+                GameObject.Destroy(lastResident.gameObject);
                 _curResident = EUIPanelDefine.Invalid;
                 _residentVisiable = false;
             }

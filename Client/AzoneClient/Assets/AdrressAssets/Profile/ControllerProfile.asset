@@ -15,3 +15,11 @@ MonoBehaviour:
   configs:
   - define: 1
     scriptType: GameWorldController
+  - define: 2
+    scriptType: StartController
+  - define: 3
+    scriptType: MainController
+  - define: 4
+    scriptType: CreateRoleController
+  - define: 5
+    scriptType: RoleController

@@ -103,7 +103,7 @@ namespace AzoneFramework.Scene
             }
 
             // 创建场景对象
-            Type scriptType = System.Reflection.Assembly.Load("Assembly-CSharp").GetType(config.scriptType);
+            Type scriptType = Type.GetType(config.scriptType);
             _currentLoadScene = Activator.CreateInstance(scriptType) as SceneBase;
             if (_currentLoadScene == null)
             {

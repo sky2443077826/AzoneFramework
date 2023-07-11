@@ -25,26 +25,6 @@ MonoBehaviour:
     m_Address: Assets/Cube.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 4b48060a63f5ade43b75c01008bf82ba
-    m_Address: SceneProfile
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: c0f79bb7aa22600419190f348e0db4b8
-    m_Address: UIProfile
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 108b00afcaee4b4429a5965b5e3353e1
-    m_Address: LoadingPanel
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: d07efffdebc676c4ba76d66b68da81aa
-    m_Address: StartPanel
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 3b992bb4034fad94fba5a27d63cf1a53
-    m_Address: ControllerProfile
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 2a80a07e88c76d549af56951e7b1f56a, type: 2}
   m_SchemaSet:

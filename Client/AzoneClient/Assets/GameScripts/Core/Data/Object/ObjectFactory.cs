@@ -25,9 +25,6 @@ public class ObjectFactory : Singleton<ObjectFactory>
     {
         base.OnCreate();
         BindObjectCreator();
-
-        // 角色管理器创建
-        RoleManager.Instance.Create();
     }
 
     protected override void OnDispose()
@@ -135,8 +132,6 @@ public class ObjectFactory : Singleton<ObjectFactory>
 
         // 设置地图
         role.SetInt("Map", (int)EMap.Main);
-        // 角色管理器设置主角
-        RoleManager.Instance.SetMainRole(role.UID);
 
         // 角色创建事件派发
         DataList args = DataList.Get();

@@ -19,13 +19,10 @@ public class SaveData
     public long LastSaveTime { get; set; }
 
     // 角色数据
-    public XmlNode roleData { get; set; }
+    public XmlElement roleData { get; set; }
 
     // 世界数据
-    public XmlNode worldData { get; set; }
+    public XmlElement worldData { get; set; }
 
-    public SaveData() 
-    {
-        NickName = "快乐小孩";
-    }
+    public SaveData() { }
 }

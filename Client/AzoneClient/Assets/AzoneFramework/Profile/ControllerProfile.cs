@@ -14,7 +14,15 @@ namespace AzoneFramework
         Invalid = 0,
 
         // 游戏世界控制器
-        GameWorld = 1,
+        GameWorld = 1,        
+        // 启动场景控制器
+        Start = 2,
+        // 主场景控制器
+        Main = 3,
+        // 创角控制器
+        CreateRole = 4,
+        // 角色控制器
+        Role = 5,
     }
 
     /// <summary>

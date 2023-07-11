@@ -12,7 +12,7 @@ namespace AzoneFramework
     /// <summary>
     /// 对象池
     /// </summary>
-    public class DataPool : Singleton<DataPool>
+    public class DataObjectPool : Singleton<DataObjectPool>
     {
         /// <summary>
         /// 对象池，ID -> pool

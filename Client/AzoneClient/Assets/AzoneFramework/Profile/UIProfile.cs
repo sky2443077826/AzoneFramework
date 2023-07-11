@@ -15,6 +15,7 @@ namespace AzoneFramework
 
         LoadingPanel = 1,       // 加载界面
         StartPanel = 2,         // 开始界面
+        MainPanel = 3,         // 主界面
     }
 
     /// <summary>

@@ -14,7 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   configs:
   - define: 1
+    SceneName: StartScene
+    scriptType: StartScene
+    isAddressbale: 0
+    residentPanel: 2
+  - define: 2
     SceneName: MainScene
     scriptType: MainScene
     isAddressbale: 0
-    residentPanel: 2
+    residentPanel: 3
