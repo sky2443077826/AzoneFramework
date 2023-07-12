@@ -99,10 +99,15 @@ public class ObjectFactory : Singleton<ObjectFactory>
     /// 创建角色
     /// </summary>
     /// <returns></returns>
-    public ulong CreateMainRole()
+    public ulong CreateMainRole(SaveData saveData)
     {
+        if (saveData == null ||saveData.document == null)
+        {
+            return 0;
+        }
+
         // 开始加载配置
-        XmlNode roleNode = StoreManager.Instance.CurSaveData?.roleData;
+        XmlNode roleNode = saveData.document.DocumentElement.SelectSingleNode("Role");
         if (roleNode == null)
         {
             return 0;
@@ -131,7 +136,7 @@ public class ObjectFactory : Singleton<ObjectFactory>
         }
 
         // 设置地图
-        role.SetInt("Map", (int)EMap.Main);
+        //role.SetInt("Map", (int)EMap.Main);
 
         // 角色创建事件派发
         DataList args = DataList.Get();

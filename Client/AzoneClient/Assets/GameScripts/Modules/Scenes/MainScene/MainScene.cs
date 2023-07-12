@@ -28,6 +28,26 @@ public class MainScene : SceneBase
     }
 
     /// <summary>
+    /// 展示之前
+    /// </summary>
+    /// <returns></returns>
+    public override IEnumerator BeforeShow()
+    {
+        // 加载逻辑
+        ObjectFactory.Instance.CreateMainRole(StoreManager.Instance.CurSaveData);
+
+        while (Progress < 1)
+        {
+            Progress += 0.01f;
+            if (Progress > 1)
+            {
+                Progress = 1;
+            }
+            yield return Yielder.endOfFrame;
+        }
+    }
+
+    /// <summary>
     /// 销毁场景时
     /// </summary>
     public override void OnDispose()
