@@ -8,6 +8,7 @@ namespace AzoneFramework.UI
     /// <summary>
     /// 所有UI组件的基类
     /// </summary>
+    [RequireComponent(typeof(RectTransform))]
     public class UIBase : MonoBehaviour
     {
         // 资产地址

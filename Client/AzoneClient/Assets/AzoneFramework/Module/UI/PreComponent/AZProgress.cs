@@ -7,14 +7,11 @@ namespace AzoneFramework.UI
     /// <summary>
     /// UI组件-进度条
     /// </summary>
-    public class AZProgress : UIComponent, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler
+    public class AZProgress : UIComponent
     { 
         /*
          * 输入事件
          */
-        public event PointerEvent onClick;
-        public event PointerEvent onPointerEnter;
-        public event PointerEvent onPointerExit;
 
         [Header("外框组件")]
         public Image imgFrame;
@@ -235,25 +232,6 @@ namespace AzoneFramework.UI
             RefreshProgress();
         }
 #endif
-
-        #region UI输入事件
-
-        public void OnPointerClick(PointerEventData eventData)
-        {
-            onClick?.Invoke(eventData, this);
-        }
-
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            onPointerEnter?.Invoke(eventData, this);
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            onPointerExit?.Invoke(eventData, this);
-        }
-
-        #endregion
 
 
 

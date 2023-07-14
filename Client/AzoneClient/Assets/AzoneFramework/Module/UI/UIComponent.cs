@@ -5,10 +5,6 @@ using UnityEngine.EventSystems;
 
 namespace AzoneFramework.UI
 {
-    public delegate void PointerEvent(PointerEventData eventData, UIComponent sender);
-    public delegate void AxisEvent(AxisEventData eventData, UIComponent sender);
-    public delegate void BaseEvent(BaseEventData eventData, UIComponent sender);
-
     /// <summary>
     /// UI自定义组件基类
     /// </summary>
