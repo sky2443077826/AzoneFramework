@@ -1,7 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.EventSystems;
 
 namespace AzoneFramework.UI
 {
@@ -15,6 +16,12 @@ namespace AzoneFramework.UI
         /// 索引
         /// </summary>
         public int Index { get; private set; }
+
+        /// <summary>
+        /// 元素索引
+        /// </summary>
+        public int ItemIndex { get; set; }
+
         /// <summary>
         /// 父列表
         /// </summary>
@@ -25,6 +32,7 @@ namespace AzoneFramework.UI
         /// </summary>
         public RectTransform CacheRecTrans { get; private set; }
 
+
         /// <summary>
         /// 初始化
         /// </summary>
@@ -33,16 +41,14 @@ namespace AzoneFramework.UI
             Index = index;
             ParentList = parentList;
             CacheRecTrans = GetComponent<RectTransform>();
+            gameObject.SetActive(true);
         }
 
-        /// <summary>
-        /// 设置物体排序
-        /// </summary>
-        /// <param name="index"></param>
-        public void SetSiblingIndex(int index)
+        public void OnDestroy()
         {
-            CacheRecTrans?.SetSiblingIndex(index);
+
         }
+
     }
 }
 

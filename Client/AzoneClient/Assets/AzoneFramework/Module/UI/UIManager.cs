@@ -30,6 +30,12 @@ namespace AzoneFramework.UI
         // 渲染层级步进值
         private static readonly int _ORDER_STEP = 10;
 
+        /// <summary>
+        /// 关闭位置。
+        /// 当面板隐藏时，移动到视野之外。避免CPU开销。
+        /// </summary>
+        public static readonly Vector3 HIDE_POS = new Vector3(99999, 99999, 0);
+
         // UI根节点
         public UIRoot Root { get; private set; }
 

@@ -7,12 +7,12 @@ namespace AzoneFramework.UI
     /// <summary>
     /// UI组件-进度条
     /// </summary>
-    public class AZProgress : UIComponent
+    [RequireComponent(typeof(RectTransform))]
+    public class AZProgress : MonoBehaviour
     { 
         /*
          * 输入事件
          */
-
         [Header("外框组件")]
         public Image imgFrame;
 
@@ -140,15 +140,12 @@ namespace AzoneFramework.UI
             }
         }
 
-        protected override void OnCreate()
-        {
-            base.OnCreate();
-            RefreshProgress();
-        }
+        public RectTransform CacheRecTrans { get; private set; }
 
-        protected override void OnDispose()
+        private void Awake()
         {
-            base.OnDispose();
+            CacheRecTrans = GetComponent<RectTransform>();
+            RefreshProgress();
         }
 
         /// <summary>
@@ -222,9 +219,6 @@ namespace AzoneFramework.UI
 
             imgFrame.color = _frameColor = color;
         }
-
-
-
 
 #if UNITY_EDITOR
         private void OnValidate()
